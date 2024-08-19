@@ -1,6 +1,7 @@
 package example.com.data.schema
 
 import example.com.data.schema.OrderService.Orders
+import example.com.routes.OTP_TIME
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
@@ -8,8 +9,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.TimeUnit
-
-val OTP_TIME = TimeUnit.MINUTES.toMillis(2)
 
 @Serializable
 data class ExposedOTP(

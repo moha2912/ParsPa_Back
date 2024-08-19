@@ -1,10 +1,7 @@
 package example.com.plugins
 
 import example.com.data.schema.*
-import example.com.routes.orderRoutes
-import example.com.routes.uploadRoutes
-import example.com.routes.userRoutes
-import example.com.routes.versionRoutes
+import example.com.routes.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -19,12 +16,6 @@ import io.ktor.util.reflect.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
-
-@Serializable
-data class OTPRequest(
-    val email: String,
-    val code: Int? = null,
-)
 
 fun Application.configureRouting() {
     install(Resources)
@@ -51,14 +42,6 @@ fun Application.configureRouting() {
             versionRoutes(versionService)
             userRoutes(userService, otpService)
             authenticate {
-                get("/images/{id}") {
-                    val imageFile = File("c:\\a.jpg")
-                    if (imageFile.exists()) {
-                        call.respondFile(imageFile)
-                    } else {
-                        call.respond(HttpStatusCode.NotFound, "Image not found")
-                    }
-                }
                 orderRoutes(userService, orderService)
                 uploadRoutes()
             }

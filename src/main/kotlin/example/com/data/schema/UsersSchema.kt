@@ -19,8 +19,9 @@ data class ExposedUser(
     val name: String? = null,
     val birthday: String? = null,
     val gender: Short? = null,
-    val phone: Long? = null,
+    val phone: String? = null,
     val address: String? = null,
+    val avatar: String? = null,
 )
 
 fun ResultRow.getExposedUser(): ExposedUser = ExposedUser(
@@ -31,6 +32,7 @@ fun ResultRow.getExposedUser(): ExposedUser = ExposedUser(
     gender = this[Users.gender],
     phone = this[Users.phone],
     address = this[Users.address],
+    avatar = this[Users.avatar],
 )
 
 class UserService(
@@ -42,8 +44,9 @@ class UserService(
         val name = varchar("name", length = 60).default("")
         val birthday = varchar("birthday", length = 10).default("")
         val gender = short("gender").default(0)
-        val phone = long("phone").default(0)
+        val phone = varchar("phone", length = 30).default("")
         val address = text("address").default("")
+        val avatar = text("avatar").default("")
 
         override val primaryKey = PrimaryKey(id)
     }

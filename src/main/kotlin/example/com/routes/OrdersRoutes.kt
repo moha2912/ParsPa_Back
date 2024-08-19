@@ -12,11 +12,13 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
+import java.io.File
 
 @Serializable
 data class InsoleRequest(
     val orderID: Long,
     val address: String,
+    val phone: String,
     val count: Int,
 )
 
@@ -50,6 +52,34 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
         post("/new") {
             val id = getIdFromToken()
             val order = call.receive<ExposedOrder>()
+            if (order.feetLength !in 15f..40f) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Feet length must between 10-50 cm.",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
+            val images = order.images
+            if (images.hasBlank) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "(${images.whichIsBlank}) image ids are blank.",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
+            if (images.hasNotExists(id)) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "(${images.whichIsNotExists(id)}) image ids are blank.",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
             orderService.create(id, order)
             call.respond(
                 message = BaseResponse(
@@ -83,6 +113,15 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
                 call.respond(
                     message = BaseResponse(
                         msg = "Address field cannot be empty.",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
+            if (order.phone.length < 7) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Phone field must be greater than 7.",
                     ),
                     status = HttpStatusCode.BadRequest
                 )

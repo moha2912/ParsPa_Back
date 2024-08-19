@@ -3,6 +3,7 @@ package example.com.data.schema
 import example.com.data.model.OrderState
 import example.com.data.schema.OrderService.Orders
 import example.com.routes.InsoleRequest
+import example.com.routes.getUserImages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -11,6 +12,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 
 @Serializable
 enum class FootAngles {
@@ -42,12 +44,43 @@ data class ExposedAngles(
     val side: String,
     val inside: String,
     val outside: String,
-)
+) {
+    val angleMap
+        get() = mapOf(
+            FootAngles.FRONT to front,
+            FootAngles.SIDE to side,
+            FootAngles.INSIDE to inside,
+            FootAngles.OUTSIDE to outside,
+        )
+
+    val hasBlank
+        get() = angleMap.any { it.value.isBlank() }
+
+    val whichIsBlank
+        get():String {
+            val map = angleMap.filter { it.value.isBlank() }
+            return map
+                .map { it.key }
+                .joinToString(separator = ",") { it.name }
+        }
+
+    fun hasNotExists(id: Long): Boolean =
+        angleMap.any { !File(getUserImages(id).plus(it.value)).exists() }
+
+
+    fun whichIsNotExists(id: Long): String {
+        val map = angleMap.filter { !File(getUserImages(id).plus(it.value)).exists() }
+        return map
+            .map { it.key }
+            .joinToString(separator = ",") { it.name }
+    }
+}
 
 @Serializable
 data class ExposedInsole(
     val count: Int,
     val address: String,
+    val phone: String,
 )
 
 fun ResultRow.toOrder() = ExposedOrder(
@@ -76,6 +109,7 @@ fun ResultRow.toOrder() = ExposedOrder(
         ExposedInsole(
             count = it,
             address = this[Orders.address] ?: "",
+            phone = this[Orders.phone] ?: "",
         )
     },
     resendPictures = this[Orders.resendPictures]?.run {
@@ -112,6 +146,7 @@ class OrderService(
             toDb = { it.name }
         ).default(OrderState.PROCESSING)
         val address = text("address").nullable()
+        val phone = varchar("phone", length = 30).nullable()
         val doctorResponse = text("doctor_response").nullable()
 
         override val primaryKey = PrimaryKey(id)
@@ -211,6 +246,7 @@ class OrderService(
             Orders.update({ Orders.id eq id }) { up ->
                 up[orderCount] = order.count
                 up[address] = order.address
+                up[phone] = order.phone
                 up[status] = OrderState.IN_PRODUCTION
             }
         }

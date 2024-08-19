@@ -6,12 +6,9 @@ import example.com.data.model.exception.AuthorizationException
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
-import jdk.internal.org.jline.utils.Colors.Q
 import java.util.*
 import java.util.concurrent.TimeUnit
-import javax.swing.text.html.HTML.Tag.S
 
 val EXPIRE_TIME = TimeUnit.DAYS.toMillis(180L)
 private const val CLAIM_KEY = "id"

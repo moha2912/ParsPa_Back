@@ -30,7 +30,7 @@ fun Application.configureStatusPages() {
         }
         exception<Throwable> { call, cause ->
             when (cause) {
-                is BadRequestException, is NullPointerException -> {
+                is BadRequestException, is NullPointerException, is IllegalStateException -> {
                     val message = cause.cause?.message
                     call.respond(
                         message = BaseResponse("Bad request: $message"), //todo REMOVE MESSAGE AFTER DEBUG
