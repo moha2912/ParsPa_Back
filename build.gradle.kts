@@ -36,11 +36,12 @@ repositories {
 
 ktor {
     fatJar {
-        archiveFileName.set("fat.jar")
+        archiveFileName.set("pars.jar")
     }
 }
 
 dependencies {
+    implementation("io.ktor:ktor-server-rate-limit")
     implementation("mysql:mysql-connector-java:8.0.33")
     //implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     //implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")

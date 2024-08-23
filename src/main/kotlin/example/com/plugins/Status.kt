@@ -30,10 +30,15 @@ fun Application.configureStatusPages() {
         }
         exception<Throwable> { call, cause ->
             when (cause) {
-                is BadRequestException, is NullPointerException, is IllegalStateException -> {
-                    val message = cause.cause?.message
+                is NotFoundException -> {
                     call.respond(
-                        message = BaseResponse("Bad request: $message"), //todo REMOVE MESSAGE AFTER DEBUG
+                        message = BaseResponse("Not found"),
+                        status = HttpStatusCode.NotFound
+                    )
+                }
+                is BadRequestException, is NullPointerException, is IllegalStateException -> {
+                    call.respond(
+                        message = BaseResponse("Bad request: ${cause.stackTraceToString()}"), //todo REMOVE MESSAGE AFTER DEBUG
                         status = HttpStatusCode.BadRequest
                     )
                 }

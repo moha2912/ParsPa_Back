@@ -3,6 +3,7 @@ package example.com.routes
 import example.com.USERS_FOLDER
 import example.com.data.model.res.BaseResponse
 import example.com.plugins.getIdFromToken
+import example.com.plugins.getPathParameter
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -15,7 +16,7 @@ import java.io.File
 
 @Serializable
 data class RequestImageDelete(
-    val imageID: String // 1
+    val imageID: String
 )
 
 fun Route.uploadRoutes() {
@@ -31,7 +32,7 @@ fun Route.uploadRoutes() {
         }
         get("/pic/{id}") {
             val id = getIdFromToken()
-            val imageID = call.parameters["id"]
+            val imageID = getPathParameter("id")
             if (!imageID.isNullOrBlank()) {
                 val imageFile = File(getUserImages(id).plus(imageID))
                 if (imageFile.exists()) {

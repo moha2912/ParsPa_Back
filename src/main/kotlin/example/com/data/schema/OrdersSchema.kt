@@ -26,8 +26,11 @@ enum class FootAngles {
 @Serializable
 data class ExposedOrder(
     val id: Long? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val orderID: Long? = null,
     val created: Long? = null,
     val feetLength: Float,
+    val feetSize: Int,
+    val weight: Float,
     val state: OrderState = OrderState.PROCESSING,
     val notes: String? = "",
     val isNew: Boolean = true,
@@ -87,6 +90,8 @@ fun ResultRow.toOrder() = ExposedOrder(
     id = this[Orders.id],
     created = this[Orders.created],
     feetLength = this[Orders.feetLength],
+    feetSize = this[Orders.feetSize],
+    weight = this[Orders.weight],
     isNew = this[Orders.isNew],
     doctorResponse = this[Orders.doctorResponse],
     notes = this[Orders.notes],
@@ -130,12 +135,14 @@ class OrderService(
         val created = long("created")
         val userId = long("user_id") references UserService.Users.id
         val feetLength = float("feet_length")
+        val feetSize = integer("feet_size").default(0)
+        val weight = float("weight")
         val angleFront = text("angle_front")
         val angleSide = text("angle_side")
         val angleInside = text("angle_inside")
         val angleOutside = text("angle_outside")
         val concerns = varchar("concerns", length = 30).default("")
-        val notes = text("notes").default("")
+        val notes = text("notes")//.default("")
         val orderCount = integer("order_count").nullable()
         val resendPictures = varchar("resend_pictures", length = 30).nullable()
         val isNew = bool("is_new").default(true)
@@ -167,6 +174,8 @@ class OrderService(
             it[created] = System.currentTimeMillis()
             it[userId] = userID
             it[feetLength] = order.feetLength
+            it[feetSize] = order.feetSize
+            it[weight] = order.weight
             order.images.let { o ->
                 it[angleFront] = o.front
                 it[angleSide] = o.side
@@ -182,7 +191,7 @@ class OrderService(
         }[Orders.id]
     }
 
-    suspend fun read(id: Long): List<ExposedOrder> {
+    suspend fun readOrders(id: Long): List<ExposedOrder> {
         return dbQuery {
             Orders
                 .selectAll()
@@ -193,7 +202,7 @@ class OrderService(
         }
     }
 
-    suspend fun readUnread(id: Long): List<ExposedOrder> {
+    suspend fun readUnreadOrders(id: Long): List<ExposedOrder> {
         return dbQuery {
             Orders
                 .selectAll()
@@ -204,11 +213,37 @@ class OrderService(
         }
     }
 
-    suspend fun isNotExists(id: Long): Boolean {
+    suspend fun readOrder(userID: Long, id: Long): ExposedOrder? {
         return dbQuery {
             Orders
                 .selectAll()
-                .where { Orders.userId eq id }
+                .where {
+                    Orders.id.eq(id) and Orders.userId.eq(userID)
+                }
+                .map {
+                    it.toOrder()
+                }
+                .singleOrNull()
+        }
+    }
+
+    suspend fun setReadOrder(userID: Long, id: Long) {
+        dbQuery {
+            Orders.update({
+                Orders.id.eq(id) and Orders.userId.eq(userID)
+            }) {
+                it[isNew] = false
+            }
+        }
+    }
+
+    suspend fun isNotExists(userID: Long, id: Long): Boolean {
+        return dbQuery {
+            Orders
+                .selectAll()
+                .where {
+                    Orders.id.eq(id) and Orders.userId.eq(userID)
+                }
                 .empty()
         }
     }
@@ -217,6 +252,10 @@ class OrderService(
         dbQuery {
             Orders.update({ Orders.id eq id }) {
                 it[feetLength] = order.feetLength
+                it[feetSize] = order.feetSize
+                it[weight] = order.weight
+                it[status] = OrderState.PROCESSING
+                it[resendPictures] = null
                 order.images.let { angle ->
                     it[angleFront] = angle.front
                     it[angleSide] = angle.side
@@ -233,17 +272,9 @@ class OrderService(
         }
     }
 
-    suspend fun readOrder(id: Long) {
+    suspend fun addInsole(order: InsoleRequest) {
         dbQuery {
-            Orders.update({ Orders.id eq id }) { up ->
-                up[isNew] = false
-            }
-        }
-    }
-
-    suspend fun addInsole(id: Long, order: InsoleRequest) {
-        dbQuery {
-            Orders.update({ Orders.id eq id }) { up ->
+            Orders.update({ Orders.id eq order.orderID }) { up ->
                 up[orderCount] = order.count
                 up[address] = order.address
                 up[phone] = order.phone

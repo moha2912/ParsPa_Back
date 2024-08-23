@@ -1,7 +1,7 @@
 package example.com.data.schema
 
-import example.com.data.schema.OTPService.OTPs
 import example.com.data.schema.UserService.Users
+import example.com.data.schema.UserService.Users.email
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -15,13 +15,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Serializable
 data class ExposedUser(
     @EncodeDefault(EncodeDefault.Mode.NEVER) var id: Long? = null,
-    @EncodeDefault(EncodeDefault.Mode.NEVER) var email: String? = null,
+    var email: String? = null,
     val name: String? = null,
     val birthday: String? = null,
     val gender: Short? = null,
-    val phone: String? = null,
+    var phone: String? = null,
     val address: String? = null,
-    val avatar: String? = null,
+    val appNotify: Boolean? = null,
+    val smsNotify: Boolean? = null,
 )
 
 fun ResultRow.getExposedUser(): ExposedUser = ExposedUser(
@@ -32,7 +33,8 @@ fun ResultRow.getExposedUser(): ExposedUser = ExposedUser(
     gender = this[Users.gender],
     phone = this[Users.phone],
     address = this[Users.address],
-    avatar = this[Users.avatar],
+    appNotify = this[Users.appNotify],
+    smsNotify = this[Users.smsNotify],
 )
 
 class UserService(
@@ -40,13 +42,14 @@ class UserService(
 ) {
     object Users : Table() {
         val id = long("_id").autoIncrement()
-        val email = varchar("email", length = 60)
+        val email = varchar("email", length = 60).default("")
         val name = varchar("name", length = 60).default("")
         val birthday = varchar("birthday", length = 10).default("")
         val gender = short("gender").default(0)
         val phone = varchar("phone", length = 30).default("")
-        val address = text("address").default("")
-        val avatar = text("avatar").default("")
+        val address = text("address").nullable()//.default("")
+        val appNotify = bool("app_notify").default(true)
+        val smsNotify = bool("sms_notify").default(true)
 
         override val primaryKey = PrimaryKey(id)
     }
@@ -61,13 +64,19 @@ class UserService(
         }
     }
 
-    suspend fun create(user: ExposedUser): Long = dbQuery {
+    suspend fun create(email: String): Long = dbQuery {
         Users.insert {
-            it[email] = user.email ?: return@insert
+            it[Users.email] = email
         }[Users.id]
     }
 
-    suspend fun read(id: Long): ExposedUser? {
+    suspend fun createPhone(phone: String): Long = dbQuery {
+        Users.insert {
+            it[Users.phone] = phone
+        }[Users.id]
+    }
+
+    suspend fun readID(id: Long): ExposedUser? {
         return dbQuery {
             Users
                 .selectAll()
@@ -79,11 +88,23 @@ class UserService(
         }
     }
 
-    suspend fun read(email: String): ExposedUser? {
+    suspend fun readEmail(email: String): ExposedUser? {
         return dbQuery {
             Users
                 .selectAll()
                 .where { Users.email eq email }
+                .map {
+                    it.getExposedUser()
+                }
+                .singleOrNull()
+        }
+    }
+
+    suspend fun readPhone(phone: String): ExposedUser? {
+        return dbQuery {
+            Users
+                .selectAll()
+                .where { Users.phone eq phone }
                 .map {
                     it.getExposedUser()
                 }
@@ -106,8 +127,17 @@ class UserService(
                 user.phone?.let {
                     up[phone] = it
                 }
+                user.email?.let {
+                    up[email] = it
+                }
                 user.address?.let {
                     up[address] = it
+                }
+                user.smsNotify?.let {
+                    up[smsNotify] = it
+                }
+                user.appNotify?.let {
+                    up[appNotify] = it
                 }
             }
         }
@@ -123,7 +153,7 @@ class UserService(
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
     suspend fun isNotFilled(id: Long): Boolean {
-        return read(id)?.address.isNullOrBlank()
+        return readID(id)?.address.isNullOrBlank()
     }
 }
 

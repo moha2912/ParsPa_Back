@@ -2,10 +2,10 @@ package example.com.plugins
 
 import org.jetbrains.exposed.sql.Database
 
-private const val url:String = "localhost"
-private const val database:String = "selfmpi2_physio"
-private const val username:String = "root" //"selfmpi2_physio",
-private const val password:String = "" //"G]=+\$yk}T%pb",
+private const val url: String = "localhost"
+private const val database: String = "selfmpi2_physio"
+private const val username: String = "selfmpi2_physio"
+private const val password: String = "G]=+\$yk}T%pb"
 
 object ParsPaDatabase {
     fun connectDatabase(): Database {

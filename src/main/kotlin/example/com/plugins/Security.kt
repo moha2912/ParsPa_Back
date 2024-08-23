@@ -6,6 +6,7 @@ import example.com.data.model.exception.AuthorizationException
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.request.*
 import io.ktor.util.pipeline.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -66,4 +67,16 @@ fun PipelineContext<Unit, ApplicationCall>.getIdFromToken(): Long {
     return principal?.payload
         ?.getClaim(CLAIM_KEY)
         ?.asLong() ?: throw AuthorizationException()
+}
+
+fun PipelineContext<Unit, ApplicationCall>.getPathParameter(path: String) = call.parameters[path]
+fun PipelineContext<Unit, ApplicationCall>.getHeader(header: String) = call.request.header(header)
+fun PipelineContext<Unit, ApplicationCall>.getFlavorHeader() =
+    Flavor.valueOf((call.request.header("flavor") ?: "persian").uppercase())
+
+enum class Flavor {
+    PERSIAN, NATIVE;
+
+    val isPersian
+        get() = this == PERSIAN
 }

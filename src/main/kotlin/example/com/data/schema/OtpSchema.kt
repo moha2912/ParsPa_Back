@@ -1,6 +1,7 @@
 package example.com.data.schema
 
 import example.com.data.schema.OrderService.Orders
+import example.com.data.schema.UserService.Users.email
 import example.com.routes.OTP_TIME
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit
 data class ExposedOTP(
     val id: Long,
     val created: Long,
-    val email: String,
+    val field: String,
     val code: Int,
 )
 
@@ -24,7 +25,7 @@ class OTPService(
     object OTPs : Table() {
         val id = long("_id").autoIncrement()
         val created = long("created")
-        val email = varchar("email", length = 60)
+        val field = varchar("field", length = 60)
         val code = integer("code")
 
         override val primaryKey = PrimaryKey(id)
@@ -40,20 +41,20 @@ class OTPService(
         }
     }
 
-    suspend fun create(requestEmail: String): Int = dbQuery {
+    suspend fun create(requestField: String): Int = dbQuery {
         OTPs.insert {
-            it[email] = requestEmail
+            it[field] = requestField
             it[created] = System.currentTimeMillis()
             it[code] = 1234 //todo Random().nextInt(8999) + 1000
         }[OTPs.code]
     }
 
-    suspend fun read(email: String): ExposedOTP? {
+    suspend fun read(field: String): ExposedOTP? {
         return dbQuery {
             OTPs
                 .selectAll()
                 .where {
-                    OTPs.email.eq(email) and OTPs.created.greater(
+                    OTPs.field.eq(field) and OTPs.created.greater(
                         System
                             .currentTimeMillis()
                             .minus(OTP_TIME)
@@ -63,7 +64,7 @@ class OTPService(
                     ExposedOTP(
                         id = it[OTPs.id],
                         created = it[OTPs.created],
-                        email = it[OTPs.email],
+                        field = it[OTPs.field],
                         code = it[OTPs.code],
                     )
                 }
@@ -71,12 +72,12 @@ class OTPService(
         }
     }
 
-    suspend fun read(email: String, otp: Int): ExposedOTP? {
+    suspend fun read(field: String, otp: Int): ExposedOTP? {
         return dbQuery {
             OTPs
                 .selectAll()
                 .where {
-                    OTPs.email.eq(email) and OTPs.code.eq(otp) and OTPs.created.greater(
+                    OTPs.field.eq(field) and OTPs.code.eq(otp) and OTPs.created.greater(
                         System
                             .currentTimeMillis()
                             .minus(OTP_TIME)
@@ -86,7 +87,7 @@ class OTPService(
                     ExposedOTP(
                         id = it[OTPs.id],
                         created = it[OTPs.created],
-                        email = it[OTPs.email],
+                        field = it[OTPs.field],
                         code = it[OTPs.code],
                     )
                 }
@@ -94,9 +95,9 @@ class OTPService(
         }
     }
 
-    suspend fun delete(email: String) {
+    suspend fun delete(field: String) {
         dbQuery {
-            OTPs.deleteWhere { OTPs.email.eq(email) }
+            OTPs.deleteWhere { OTPs.field.eq(field) }
         }
     }
 

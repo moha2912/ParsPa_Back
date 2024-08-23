@@ -35,9 +35,9 @@ class VersionsService(
         val name = varchar("name", length = 60)
         val version = varchar("version", length = 60).default("1.0")
         val versionCode = integer("version_code").default(1)
-        val lastChanges = text("last_changes").default("")
+        val lastChanges = text("last_changes")//.default("")
         val mandatory = bool("mandatory").default(false)
-        val updateUrl = text("update_url").default("")
+        val updateUrl = text("update_url")//.default("")
 
         override val primaryKey = PrimaryKey(id)
     }
