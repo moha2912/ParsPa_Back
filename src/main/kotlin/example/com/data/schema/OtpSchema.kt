@@ -41,11 +41,11 @@ class OTPService(
         }
     }
 
-    suspend fun create(requestField: String): Int = dbQuery {
+    suspend fun create(requestField: String,otp:Int): Int = dbQuery {
         OTPs.insert {
             it[field] = requestField
             it[created] = System.currentTimeMillis()
-            it[code] = 1234 //todo Random().nextInt(8999) + 1000
+            it[code] = otp
         }[OTPs.code]
     }
 
