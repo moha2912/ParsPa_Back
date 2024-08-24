@@ -38,13 +38,11 @@ fun Application.configureRouting() {
             )
         }*/
 
-        route("/api") {
-            versionRoutes(versionService)
-            userRoutes(userService, otpService)
-            authenticate {
-                orderRoutes(userService, orderService)
-                uploadRoutes()
-            }
+        versionRoutes(versionService)
+        userRoutes(userService, otpService)
+        authenticate {
+            orderRoutes(userService, orderService)
+            uploadRoutes()
         }
     }
 }

@@ -8,36 +8,26 @@ import example.com.data.model.res.UserResponse
 import example.com.data.schema.ExposedUser
 import example.com.data.schema.OTPService
 import example.com.data.schema.UserService
-import example.com.plugins.createToken
-import example.com.plugins.getFlavorHeader
-import example.com.plugins.getIdFromToken
+import example.com.plugins.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.logging.*
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.File
+import java.util.Random
 import java.util.concurrent.TimeUnit
 
-fun getUserFolder(id: Long) = USERS_FOLDER.plus(
-    id
-        .toString()
-        .plus("/")
-)
-
-fun getUserAvatar(id: Long) = getUserFolder(id).plus("avatar")
-fun getUserImages(id: Long) = getUserFolder(id).plus("img/")
-fun getUserVideos(id: Long) = getUserFolder(id).plus("vid/")
-
-@Serializable
-data class OTPRequest(
-    val field: String,
-    val code: Int? = null,
-)
+const val SMS_PANEL_URL = "https://api2.ippanel.com/api/v1/sms/pattern/normal/send"
+const val SMS_PANEL_API = "UP63w9369jXeDkCxJBr1FmVkk6QHYP2S1aKmrxLHo-E="
 
 val smsRateLimit = mutableMapOf<String, Long>()
+val otpRequests = mutableMapOf<String, Int>()
 val OTP_TIME = TimeUnit.MINUTES.toMillis(2)
 val SMS_OTP_TIME = TimeUnit.MINUTES.toMillis(5)
 val RATE_LIMIT_DURATION = TimeUnit.HOURS.toMillis(6)
@@ -48,8 +38,11 @@ fun Route.userRoutes(userService: UserService, otpService: OTPService) {
         post("/request") {
             val otpRequest = call.receive<OTPRequest>()
             val flavor = getFlavorHeader() // todo: change path for persian-native
+            val isDebug = getBoolHeader("debug") // todo: change path for persian-native
             val time = if (flavor.isPersian) SMS_OTP_TIME else OTP_TIME
             val field = otpRequest.field
+            val hash = otpRequest.hash
+            val otp = if (!flavor.isPersian || isDebug) 1234 else Random().nextInt(8999) + 1000
 
             if (field.isBlank()) {
                 call.respond(
@@ -75,12 +68,20 @@ fun Route.userRoutes(userService: UserService, otpService: OTPService) {
             }
 
             if (flavor.isPersian) {
-                // todo send message
-                if (field.any { !it.isDigit() }) {
+                if (field.any { !it.isDigit() } || !field.startsWith("09") || field.length != 11) {
                     call.respond(
                         status = HttpStatusCode.BadRequest,
                         message = BaseResponse(
-                            msg = "Wrong phone format",
+                            msg = "Wrong phone format (send like 09..)",
+                        )
+                    )
+                    return@post
+                }
+                if (hash.isNullOrBlank()) {
+                    call.respond(
+                        status = HttpStatusCode.BadRequest,
+                        message = BaseResponse(
+                            msg = "Hash is empty",
                         )
                     )
                     return@post
@@ -97,10 +98,18 @@ fun Route.userRoutes(userService: UserService, otpService: OTPService) {
                     )
                     return@post
                 }
-                smsRateLimit[field] = requestTimes + 1
-                otpService.create(field)
+                if (isDebug || sendSMSRequest(field, otp, hash)) {
+                    smsRateLimit[field] = requestTimes + 1
+                    otpService.create(field, otp)
+                } else {
+                    call.respond(
+                        message = BaseResponse("Server error, try again later"),
+                        status = HttpStatusCode.InternalServerError
+                    )
+                    return@post
+                }
             } else {
-                otpService.create(field) // todo phone
+                otpService.create(field, otp)
             }
             call.respond(
                 OTPResponse(
@@ -240,3 +249,21 @@ fun Route.profileRoutes(userService: UserService) {
         }
     }
 }
+
+@Serializable
+data class OTPRequest(
+    val field: String,
+    val code: Int? = null,
+    val hash: String? = null,
+)
+
+
+fun getUserFolder(id: Long) = USERS_FOLDER.plus(
+    id
+        .toString()
+        .plus("/")
+)
+
+fun getUserAvatar(id: Long) = getUserFolder(id).plus("avatar")
+fun getUserImages(id: Long) = getUserFolder(id).plus("img/")
+fun getUserVideos(id: Long) = getUserFolder(id).plus("vid/")
