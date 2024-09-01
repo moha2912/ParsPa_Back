@@ -5,5 +5,6 @@ enum class OrderState {
     ERROR_RESEND,
     DOCTOR_RESPONSE,
     IN_PRODUCTION,
+    SENDING,
     DELIVERED,
 }

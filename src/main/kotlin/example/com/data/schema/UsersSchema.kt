@@ -1,7 +1,6 @@
 package example.com.data.schema
 
 import example.com.data.schema.UserService.Users
-import example.com.data.schema.UserService.Users.email
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi

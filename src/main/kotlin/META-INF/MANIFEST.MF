@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Main-Class: example.com.ApplicationKt
+Class-Path: jwks-rsa-0.22.1.jar jsr305-3.0.2.jar ktor-network-jvm-2.3.12
+ .jar ktor-server-netty-jvm-2.3.12.jar kotlin-stdlib-jdk7-1.8.22.jar kto
+ r-server-resources-jvm-2.3.12.jar kotlin-stdlib-jdk8-1.8.22.jar ktor-se
+ rver-caching-headers-jvm-2.3.12.jar ktor-server-auth-jvm-2.3.12.jar net
+ ty-transport-classes-epoll-4.1.111.Final.jar protobuf-java-3.21.9.jar k
+ tor-client-core-jvm-2.3.12.jar ktor-utils-jvm-2.3.12.jar ktor-websocket
+ s-jvm-2.3.12.jar netty-transport-native-epoll-4.1.111.Final.jar netty-c
+ odec-http-4.1.111.Final.jar ktor-server-rate-limit-jvm-2.3.12.jar ktor-
+ http-jvm-2.3.12.jar kotlinx-serialization-core-jvm-1.5.1.jar ktor-serve
+ r-default-headers-jvm-2.3.12.jar jansi-2.4.1.jar checker-qual-3.33.0.ja
+ r netty-buffer-4.1.111.Final.jar netty-codec-http2-4.1.111.Final.jar ja
+ va-jwt-4.4.0.jar ktor-server-core-jvm-2.3.12.jar alpn-api-1.1.3.v201607
+ 15.jar jackson-core-2.15.0.jar ktor-io-jvm-2.3.12.jar ktor-server-auth-
+ jwt-jvm-2.3.12.jar logback-classic-1.4.14.jar netty-transport-native-kq
+ ueue-4.1.111.Final.jar kotlinx-coroutines-core-jvm-1.8.1.jar failureacc
+ ess-1.0.1.jar exposed-jdbc-0.52.0.jar guava-32.1.1-jre.jar error_prone_
+ annotations-2.18.0.jar exposed-core-0.52.0.jar netty-resolver-4.1.111.F
+ inal.jar ktor-websocket-serialization-jvm-2.3.12.jar kotlinx-coroutines
+ -jdk8-1.8.1.jar netty-codec-4.1.111.Final.jar ktor-serialization-kotlin
+ x-jvm-2.3.12.jar ktor-server-status-pages-jvm-2.3.12.jar fastdoublepars
+ er-0.8.0.jar kotlin-stdlib-2.0.10.jar netty-transport-classes-kqueue-4.
+ 1.111.Final.jar netty-transport-4.1.111.Final.jar kotlin-reflect-1.9.21
+ .jar logback-core-1.4.14.jar ktor-events-jvm-2.3.12.jar ktor-server-con
+ tent-negotiation-jvm-2.3.12.jar netty-transport-native-unix-common-4.1.
+ 111.Final.jar ktor-resources-jvm-2.3.12.jar ktor-server-sessions-jvm-2.
+ 3.12.jar kotlinx-serialization-json-jvm-1.5.1.jar ktor-serialization-ko
+ tlinx-json-jvm-2.3.12.jar jackson-databind-2.15.0.jar netty-handler-4.1
+ .111.Final.jar slf4j-api-2.0.9.jar ktor-server-call-logging-jvm-2.3.12.
+ jar h2-2.1.214.jar mysql-connector-j-8.0.33.jar netty-common-4.1.111.Fi
+ nal.jar ktor-server-host-common-jvm-2.3.12.jar ktor-http-cio-jvm-2.3.12
+ .jar ktor-serialization-jvm-2.3.12.jar annotations-23.0.0.jar jackson-a
+ nnotations-2.15.0.jar kotlinx-coroutines-slf4j-1.8.1.jar config-1.4.3.j
+ ar
+

@@ -15,11 +15,14 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class InsoleRequest(
-    val orderID: Long,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val orderID: Long? = null,
     val address: String,
     val phone: String,
     val count: Int,
@@ -94,19 +97,19 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
                 return@post
             }
             val images = requestOrder.images
-            if (images.hasBlank) {
+            if (!requestOrder.isNotBlank) {
                 call.respond(
                     message = BaseResponse(
-                        msg = "(${images.whichIsBlank}) image ids are blank.",
+                        msg = "one or few image ids are blank.",
                     ),
                     status = HttpStatusCode.BadRequest
                 )
                 return@post
             }
-            if (images.hasNotExists(id)) {
+            if (!requestOrder.isAllExists(id)) {
                 call.respond(
                     message = BaseResponse(
-                        msg = "(${images.whichIsNotExists(id)}) image ids are not found.",
+                        msg = "One or few image ids are not found.",
                     ),
                     status = HttpStatusCode.BadRequest
                 )
@@ -195,27 +198,5 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
                 ),
             )
         }
-        // -----------------------------------------------------------------------
-        // todo
-        /*get("/admin") {
-            val id = getIdFromToken()
-            val orders = orderService.readUnread(id)
-            call.respond(
-                message = OrdersResponse(
-                    msg = "Ok.",
-                    orders = orders
-                ),
-            )
-        }
-        get("/changeState") {
-            val id = getIdFromToken()
-            val orders = orderService.readUnread(id)
-            call.respond(
-                message = OrdersResponse(
-                    msg = "Ok.",
-                    orders = orders
-                ),
-            )
-        }*/
     }
 }

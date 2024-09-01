@@ -2,31 +2,27 @@ package example.com.data.schema
 
 import example.com.data.model.OrderState
 import example.com.data.schema.OrderService.Orders
+import example.com.routes.ChangeState
 import example.com.routes.InsoleRequest
 import example.com.routes.getUserImages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
-@Serializable
-enum class FootAngles {
-    FRONT,
-    SIDE,
-    INSIDE,
-    OUTSIDE,
-}
-
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class ExposedOrder(
     val id: Long? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val orderID: Long? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val userID: Long? = null,
     val created: Long? = null,
     val feetLength: Float,
     val feetSize: Int,
@@ -34,48 +30,33 @@ data class ExposedOrder(
     val state: OrderState = OrderState.PROCESSING,
     val notes: String? = "",
     val isNew: Boolean = true,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val isAdminNew: Boolean? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val insole: ExposedInsole? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val doctorResponse: String? = null,
-    @EncodeDefault(EncodeDefault.Mode.NEVER) val resendPictures: List<FootAngles>? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val resendPictures: List<String>? = null,
     val concerns: List<Int>? = emptyList(),
-    val images: ExposedAngles,
-)
-
-@Serializable
-data class ExposedAngles(
-    val front: String,
-    val side: String,
-    val inside: String,
-    val outside: String,
+    val images: Map<Foots, Map<Angles, String>>,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val video: String? = null,
 ) {
-    val angleMap
-        get() = mapOf(
-            FootAngles.FRONT to front,
-            FootAngles.SIDE to side,
-            FootAngles.INSIDE to inside,
-            FootAngles.OUTSIDE to outside,
-        )
-
-    val hasBlank
-        get() = angleMap.any { it.value.isBlank() }
-
-    val whichIsBlank
-        get():String {
-            val map = angleMap.filter { it.value.isBlank() }
-            return map
-                .map { it.key }
-                .joinToString(separator = ",") { it.name }
+    val isNotBlank
+        get():Boolean {
+            return Foots.entries.all { foot ->
+                val map = images[foot] ?: return@all false
+                Angles.entries
+                    .take(foot.count * 2)
+                    .all {
+                        map[it]
+                            .isNullOrBlank()
+                            .not()
+                    }
+            }
         }
 
-    fun hasNotExists(id: Long): Boolean =
-        angleMap.any { !File(getUserImages(id).plus(it.value)).exists() }
-
-
-    fun whichIsNotExists(id: Long): String {
-        val map = angleMap.filter { !File(getUserImages(id).plus(it.value)).exists() }
-        return map
-            .map { it.key }
-            .joinToString(separator = ",") { it.name }
+    fun isAllExists(id: Long): Boolean {
+        return Foots.entries.all { foot ->
+            val map = images[foot] ?: return@all false
+            map.all { File(getUserImages(id).plus(it.value)).exists() }
+        }
     }
 }
 
@@ -86,7 +67,7 @@ data class ExposedInsole(
     val phone: String,
 )
 
-fun ResultRow.toOrder() = ExposedOrder(
+fun ResultRow.toOrder(fillAdmin: Boolean = false) = ExposedOrder(
     id = this[Orders.id],
     created = this[Orders.created],
     feetLength = this[Orders.feetLength],
@@ -95,36 +76,13 @@ fun ResultRow.toOrder() = ExposedOrder(
     isNew = this[Orders.isNew],
     doctorResponse = this[Orders.doctorResponse],
     notes = this[Orders.notes],
-    state = this[Orders.status],
-    concerns = this[Orders.concerns].run {
-        val list = split(",")
-        if (this.isNotBlank() && list.isNotEmpty()) {
-            list.map { it.toInt() }
-        } else {
-            emptyList()
-        }
-    },
-    images = ExposedAngles(
-        front = this[Orders.angleFront],
-        side = this[Orders.angleSide],
-        inside = this[Orders.angleInside],
-        outside = this[Orders.angleOutside],
-    ),
-    insole = this[Orders.orderCount]?.let {
-        ExposedInsole(
-            count = it,
-            address = this[Orders.address] ?: "",
-            phone = this[Orders.phone] ?: "",
-        )
-    },
-    resendPictures = this[Orders.resendPictures]?.run {
-        val list = split(",")
-        if (this.isNotBlank() && list.isNotEmpty()) {
-            list.map { FootAngles.valueOf(it) }
-        } else {
-            emptyList()
-        }
-    },
+    state = OrderState.valueOf(this[Orders.status]),
+    concerns = Json.decodeFromString(this[Orders.concerns]),
+    images = Json.decodeFromString(this[Orders.images]),
+    insole = this[Orders.insole]?.let { Json.decodeFromString(it) },
+    resendPictures = this[Orders.resendPictures]?.let { Json.decodeFromString(it) },
+    isAdminNew = if (!fillAdmin) null else this[Orders.isAdminNew],
+    userID = if (!fillAdmin) null else this[Orders.userId]
 )
 
 class OrderService(
@@ -137,23 +95,18 @@ class OrderService(
         val feetLength = float("feet_length")
         val feetSize = integer("feet_size").default(0)
         val weight = float("weight")
-        val angleFront = text("angle_front")
-        val angleSide = text("angle_side")
-        val angleInside = text("angle_inside")
-        val angleOutside = text("angle_outside")
-        val concerns = varchar("concerns", length = 30).default("")
+        val images = text("images")//.default("")
+        val concerns = text("concerns")//.default("[]")
         val notes = text("notes")//.default("")
-        val orderCount = integer("order_count").nullable()
-        val resendPictures = varchar("resend_pictures", length = 30).nullable()
+        val resendPictures = text("resend_pictures").nullable()
         val isNew = bool("is_new").default(true)
-        val status: Column<OrderState> = customEnumeration(
-            name = "status",
-            sql = "VARCHAR(30)",
-            fromDb = { value -> OrderState.valueOf(value as String) },
-            toDb = { it.name }
-        ).default(OrderState.PROCESSING)
-        val address = text("address").nullable()
-        val phone = varchar("phone", length = 30).nullable()
+        val isAdminNew = bool("is_admin_new").default(true)
+        val status = varchar(
+            "status",
+            length = 30
+        ).default(OrderState.PROCESSING.name) references OrderStateService.OrderStates.name
+        val video = text("video").nullable()
+        val insole = text("insole").nullable()
         val doctorResponse = text("doctor_response").nullable()
 
         override val primaryKey = PrimaryKey(id)
@@ -176,14 +129,9 @@ class OrderService(
             it[feetLength] = order.feetLength
             it[feetSize] = order.feetSize
             it[weight] = order.weight
-            order.images.let { o ->
-                it[angleFront] = o.front
-                it[angleSide] = o.side
-                it[angleInside] = o.inside
-                it[angleOutside] = o.outside
-            }
+            it[images] = Json.encodeToString(order.images)
             order.concerns?.let { n ->
-                it[concerns] = n.joinToString(separator = ",") { it.toString() }
+                it[concerns] = Json.encodeToString(n)
             }
             order.notes?.let { n ->
                 it[notes] = n
@@ -202,6 +150,22 @@ class OrderService(
         }
     }
 
+    suspend fun readAllOrders(filter: String?): List<ExposedOrder> {
+        return dbQuery {
+            Orders
+                .selectAll()
+                .run {
+                    filter?.let {
+                        where { Orders.status.eq(it) }
+                    } ?: this
+                }
+                .map {
+                    it.toOrder(fillAdmin = true)
+                }
+                .sortedWith(compareBy<ExposedOrder> { it.isAdminNew != true }.thenBy { it.created })
+        }
+    }
+
     suspend fun readUnreadOrders(id: Long): List<ExposedOrder> {
         return dbQuery {
             Orders
@@ -213,7 +177,8 @@ class OrderService(
         }
     }
 
-    suspend fun readOrder(userID: Long, id: Long): ExposedOrder? {
+    suspend fun readOrder(userID: Long, id: Long?): ExposedOrder? {
+        id ?: return null
         return dbQuery {
             Orders
                 .selectAll()
@@ -237,6 +202,16 @@ class OrderService(
         }
     }
 
+    suspend fun setAdminReadOrder(id: Long) {
+        dbQuery {
+            Orders.update({
+                Orders.id.eq(id)
+            }) {
+                it[isAdminNew] = false
+            }
+        }
+    }
+
     suspend fun isNotExists(userID: Long, id: Long): Boolean {
         return dbQuery {
             Orders
@@ -254,31 +229,41 @@ class OrderService(
                 it[feetLength] = order.feetLength
                 it[feetSize] = order.feetSize
                 it[weight] = order.weight
-                it[status] = OrderState.PROCESSING
+                it[status] = OrderState.PROCESSING.name
                 it[resendPictures] = null
-                order.images.let { angle ->
-                    it[angleFront] = angle.front
-                    it[angleSide] = angle.side
-                    it[angleInside] = angle.inside
-                    it[angleOutside] = angle.outside
-                }
+                it[images] = Json.encodeToString(order.images)
                 order.concerns?.let { concern ->
-                    it[concerns] = concern.joinToString(separator = ",") { it.toString() }
+                    it[concerns] = Json.encodeToString(concern)
                 }
                 order.notes?.let { note ->
                     it[notes] = note
                 }
+                it[isAdminNew] = true
+            }
+        }
+    }
+
+    suspend fun updateState(order: ChangeState) {
+        dbQuery {
+            Orders.update({ Orders.id eq order.orderID }) {
+                it[resendPictures] =
+                    if (order.newState != OrderState.ERROR_RESEND) null else Json.encodeToString(order.resendPictures)
+                order.doctorResponse?.let { r ->
+                    it[doctorResponse] = r
+                }
+                it[isNew] = true
+                it[status] = order.newState.name
             }
         }
     }
 
     suspend fun addInsole(order: InsoleRequest) {
+        order.orderID ?: return
         dbQuery {
             Orders.update({ Orders.id eq order.orderID }) { up ->
-                up[orderCount] = order.count
-                up[address] = order.address
-                up[phone] = order.phone
-                up[status] = OrderState.IN_PRODUCTION
+                up[insole] = Json.encodeToString(order.copy(orderID = null))
+                up[status] = OrderState.IN_PRODUCTION.name
+                up[isAdminNew] = true
             }
         }
     }
@@ -293,3 +278,17 @@ class OrderService(
         newSuspendedTransaction(Dispatchers.IO) { block() }
 }
 
+@Serializable
+enum class Foots(val count: Int) {
+    RIGHT(2),
+    LEFT(2),
+    KNEES(1),
+}
+
+@Serializable
+enum class Angles {
+    FRONT,
+    BACK,
+    UPSIDE,
+    INSIDE,
+}

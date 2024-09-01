@@ -1,31 +1,30 @@
 package example.com.plugins
 
+import example.com.data.model.res.BaseResponse
 import example.com.data.schema.*
 import example.com.routes.*
 import io.ktor.http.*
-import io.ktor.http.content.*
 import io.ktor.server.application.*
-import io.ktor.server.application.ApplicationCallPipeline.ApplicationPhase.Plugins
 import io.ktor.server.auth.*
-import io.ktor.server.http.content.*
-import io.ktor.server.request.*
-import io.ktor.server.resources.Resources
+import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.reflect.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import java.io.File
+import kotlinx.coroutines.runBlocking
 
 fun Application.configureRouting() {
     install(Resources)
     routing {
         val database = ParsPaDatabase.connectDatabase()
         val userService = UserService(database)
+        val adminUserService = AdminUserService(database)
         val otpService = OTPService(database)
         val orderService = OrderService(database)
+        val orderStatesService = OrderStateService(database)
         val versionService = VersionsService(database)
 
+        runBlocking {
+            orderStatesService.addStates()
+        }
         /*intercept(Plugins) {
             versionService.create(
                 ExposedVersion(
@@ -37,9 +36,18 @@ fun Application.configureRouting() {
                 )
             )
         }*/
+        get {
+            call.respond(
+                status = HttpStatusCode.OK,
+                message = BaseResponse(
+                    msg = "ParsPa-AI API v1.1"
+                )
+            )
+        }
 
         versionRoutes(versionService)
         userRoutes(userService, otpService)
+        adminRoutes(adminUserService, userService, orderService)
         authenticate {
             orderRoutes(userService, orderService)
             uploadRoutes()

@@ -42,11 +42,10 @@ fun Route.uploadRoutes() {
             }
             call.respond(HttpStatusCode.NotFound, "Image not found")
         }
-        delete("/pic") {
+        delete("/pic/{id}") {
             val id = getIdFromToken()
-            val request = call.receive<RequestImageDelete>()
-            val fileName = request.imageID
-            val filePath = getUserImages(id).plus(fileName)
+            val imageID = getPathParameter("id")
+            val filePath = getUserImages(id).plus(imageID)
             File(filePath).delete()
             call.respond(
                 BaseResponse(

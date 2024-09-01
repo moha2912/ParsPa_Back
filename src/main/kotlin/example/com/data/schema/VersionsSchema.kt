@@ -1,21 +1,10 @@
 package example.com.data.schema
 
-import example.com.data.schema.OTPService.OTPs.code
-import example.com.data.schema.OrderService.Orders
-import example.com.data.schema.OrderService.Orders.angleFront
-import example.com.data.schema.OrderService.Orders.angleInside
-import example.com.data.schema.OrderService.Orders.angleOutside
-import example.com.data.schema.OrderService.Orders.angleSide
-import example.com.data.schema.OrderService.Orders.concerns
-import example.com.data.schema.OrderService.Orders.feetLength
-import example.com.data.schema.OrderService.Orders.notes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.Random
 
 @Serializable
 data class ExposedVersion(
@@ -35,9 +24,9 @@ class VersionsService(
         val name = varchar("name", length = 60)
         val version = varchar("version", length = 60).default("1.0")
         val versionCode = integer("version_code").default(1)
-        val lastChanges = text("last_changes")//.default("")
+        val lastChanges = text("last_changes").nullable()//.default("")
         val mandatory = bool("mandatory").default(false)
-        val updateUrl = text("update_url")//.default("")
+        val updateUrl = text("update_url").nullable()//.default("")
 
         override val primaryKey = PrimaryKey(id)
     }
@@ -75,9 +64,9 @@ class VersionsService(
                         name = it[Versions.name],
                         version = it[Versions.version],
                         versionCode = it[Versions.versionCode],
-                        lastChanges = it[Versions.lastChanges],
+                        lastChanges = it[Versions.lastChanges] ?: "",
                         mandatory = it[Versions.mandatory],
-                        updateUrl = it[Versions.updateUrl],
+                        updateUrl = it[Versions.updateUrl] ?: "",
                     )
                 }
                 .singleOrNull()

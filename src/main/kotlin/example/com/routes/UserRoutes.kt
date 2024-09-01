@@ -15,12 +15,9 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.logging.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.io.File
-import java.util.Random
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 const val SMS_PANEL_URL = "https://api2.ippanel.com/api/v1/sms/pattern/normal/send"
@@ -120,6 +117,11 @@ fun Route.userRoutes(userService: UserService, otpService: OTPService) {
         }
         post("/login") {
             val flavor = getFlavorHeader()
+            val brand = getBrandHeader()
+            val model = getModelHeader()
+            val api = getApiHeader()
+            val agent = getUserAgent()
+
             val otpRequest = call.receive<OTPRequest>()
             otpRequest.code ?: throw NullPointerException()
             val field = otpRequest.field
@@ -150,10 +152,19 @@ fun Route.userRoutes(userService: UserService, otpService: OTPService) {
             call.respond(
                 UserResponse(
                     msg = "Successfully logged in.",
-                    token = createToken(id),
-                    user = exposedUser?.also {
-                        it.id = null
-                    }
+                    token = createToken(
+                        TokenClaim(
+                            flavor = flavor,
+                            deviceBrand = brand,
+                            deviceModel = model,
+                            deviceApi = api,
+                            userID = id,
+                            userAgent = agent
+                        )
+                    ),
+                    user = exposedUser?.copy(
+                        id = null
+                    )
                 )
             )
         }
@@ -191,9 +202,9 @@ fun Route.profileRoutes(userService: UserService) {
             call.respond(
                 UserResponse(
                     msg = "Ok.",
-                    user = exposedUser.also {
-                        it?.id = null
-                    }
+                    user = exposedUser?.copy(
+                        id = null
+                    )
                 )
             )
         }
