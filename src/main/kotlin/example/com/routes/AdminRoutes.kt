@@ -7,6 +7,7 @@ import example.com.data.model.res.OrdersResponse
 import example.com.data.schema.AdminUserService
 import example.com.data.schema.OrderService
 import example.com.data.schema.UserService
+import example.com.data.schema.VersionsService
 import example.com.plugins.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -33,8 +34,18 @@ data class ChangeState(
     val resendPictures: List<String>? = null,
 )
 
+@Serializable
+data class UploadApp(
+    val appName: String,
+    val fileName: String,
+    val version: String,
+    val versionCode: Int,
+    val lastChanges: String,
+)
+
 fun Route.adminRoutes(
     adminService: AdminUserService,
+    versionsService: VersionsService,
     userService: UserService,
     orderService: OrderService
 ) {
@@ -76,7 +87,7 @@ fun Route.adminRoutes(
                 call.respond(
                     message = OrdersResponse(
                         msg = "Ok.",
-                        orders = orderService.readAllOrders(filter)
+                        orders = orderService.getAllOrders(filter)
                     ),
                 )
             }
@@ -84,6 +95,19 @@ fun Route.adminRoutes(
                 checkAdminUser(adminService)
                 val order = call.receive<ChangeState>()
                 orderService.updateState(order)
+                val message = when (order.newState) {
+                    OrderState.ERROR_RESEND -> "درخواست شما در اپلیکیشن پارس پا رد شد، درخواست خود را ویرایش کنید." //todo Strings.rejectParsPa
+                    OrderState.DOCTOR_RESPONSE -> "درخواست شما در اپلیکیشن پارس پا پاسخ داده شد."
+                    OrderState.SENDING -> "سفارش کفی شما انجام و به آدرس تعیین شده شما ارسال شد. جهت بررسی وارد اپلیکیشن شوید."
+                    else -> "وضعیت درخواست شما در اپلیکیشن پارس پا تغییر پیدا کرد. جهت بررسی و ادامه وارد اپلیکیشن شوید."
+                }.plus("\nweb.parspa-ai.ir")
+                orderService
+                    .adminGetOrder(order.orderID)
+                    ?.let { // todo use JOIN
+                        userService.readID(it.userID)?.phone?.let {
+                            sendStateMessage(recipient = it, msg = message)
+                        }
+                    }
                 call.respond(
                     message = BaseResponse(
                         msg = "Ok.",
@@ -112,6 +136,22 @@ fun Route.adminRoutes(
                     }
                 }
                 call.respond(HttpStatusCode.NotFound, "Image not found")
+            }
+            post("/app") {
+                checkAdminUser(adminService)
+                receiveApp()?.let {
+                    versionsService.update(it)
+                    call.respond(
+                        message = BaseResponse(
+                            msg = "Ok.",
+                        ),
+                    )
+                } ?: call.respond(
+                    status = HttpStatusCode.BadRequest,
+                    message = BaseResponse(
+                        msg = "Nothing was uploaded"
+                    )
+                )
             }
         }
     }

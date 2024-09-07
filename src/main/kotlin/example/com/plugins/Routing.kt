@@ -47,7 +47,7 @@ fun Application.configureRouting() {
 
         versionRoutes(versionService)
         userRoutes(userService, otpService)
-        adminRoutes(adminUserService, userService, orderService)
+        adminRoutes(adminUserService, versionService, userService, orderService)
         authenticate {
             orderRoutes(userService, orderService)
             uploadRoutes()

@@ -32,6 +32,7 @@ java {
 }
 repositories {
     mavenCentral()
+    maven { setUrl("https://jitpack.io") }
 }
 
 ktor {
@@ -41,8 +42,10 @@ ktor {
 }
 
 dependencies {
+    implementation("io.ktor:ktor-server-cors")
     implementation("io.ktor:ktor-server-rate-limit")
     implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.1.0")
     //implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     //implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")

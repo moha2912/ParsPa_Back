@@ -18,6 +18,13 @@ data class RequestSMS(
 }
 
 @Serializable
+data class NormalSMS(
+    var recipient: List<String>,
+    var sender: String,
+    var message: String
+)
+
+@Serializable
 data class ResponseSMS(
     val code: Int?,
     val `data`: String?,

@@ -2,10 +2,11 @@ package example.com
 
 import example.com.plugins.*
 import io.ktor.server.application.*
-import java.io.File
 import java.util.*
 
 const val USERS_FOLDER = "users/"
+const val DL_HOST = "https://dl.parspa-ai.ir/"
+const val DL_PATH = "/var/www/downloads/"
 
 fun main(args: Array<String>) {
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tehran"))
@@ -15,6 +16,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    // todo TelegramBot.prepare()
+    configureCors()
     configureRateLimit()
     configureStatusPages()
     configureSerialization()

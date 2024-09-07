@@ -139,7 +139,7 @@ class OrderService(
         }[Orders.id]
     }
 
-    suspend fun readOrders(id: Long): List<ExposedOrder> {
+    suspend fun getOrders(id: Long): List<ExposedOrder> {
         return dbQuery {
             Orders
                 .selectAll()
@@ -150,7 +150,33 @@ class OrderService(
         }
     }
 
-    suspend fun readAllOrders(filter: String?): List<ExposedOrder> {
+    suspend fun getUnreadOrders(id: Long): List<ExposedOrder> {
+        return dbQuery {
+            Orders
+                .selectAll()
+                .where { Orders.userId eq id and Orders.isNew.eq(true) }
+                .map {
+                    it.toOrder()
+                }
+        }
+    }
+
+    suspend fun getOrder(userID: Long, id: Long?): ExposedOrder? {
+        id ?: return null
+        return dbQuery {
+            Orders
+                .selectAll()
+                .where {
+                    Orders.id.eq(id) and Orders.userId.eq(userID)
+                }
+                .map {
+                    it.toOrder()
+                }
+                .singleOrNull()
+        }
+    }
+
+    suspend fun getAllOrders(filter: String?): List<ExposedOrder> {
         return dbQuery {
             Orders
                 .selectAll()
@@ -166,27 +192,16 @@ class OrderService(
         }
     }
 
-    suspend fun readUnreadOrders(id: Long): List<ExposedOrder> {
-        return dbQuery {
-            Orders
-                .selectAll()
-                .where { Orders.userId eq id and Orders.isNew.eq(true) }
-                .map {
-                    it.toOrder()
-                }
-        }
-    }
-
-    suspend fun readOrder(userID: Long, id: Long?): ExposedOrder? {
+    suspend fun adminGetOrder(id: Long?): ExposedOrder? {
         id ?: return null
         return dbQuery {
             Orders
                 .selectAll()
                 .where {
-                    Orders.id.eq(id) and Orders.userId.eq(userID)
+                    Orders.id.eq(id)
                 }
                 .map {
-                    it.toOrder()
+                    it.toOrder(fillAdmin = true)
                 }
                 .singleOrNull()
         }

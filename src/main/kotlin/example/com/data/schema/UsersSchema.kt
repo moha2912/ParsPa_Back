@@ -75,7 +75,8 @@ class UserService(
         }[Users.id]
     }
 
-    suspend fun readID(id: Long): ExposedUser? {
+    suspend fun readID(id: Long?): ExposedUser? {
+        id ?: return null
         return dbQuery {
             Users
                 .selectAll()

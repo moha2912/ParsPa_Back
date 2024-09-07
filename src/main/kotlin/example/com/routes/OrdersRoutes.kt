@@ -1,5 +1,6 @@
 package example.com.routes
 
+import app.bot.TelegramBot
 import example.com.data.model.OrderState
 import example.com.data.model.res.BaseResponse
 import example.com.data.model.res.OrderResponse
@@ -37,7 +38,7 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
     route("/orders") {
         get {
             val id = getIdFromToken()
-            val orders = orderService.readOrders(id)
+            val orders = orderService.getOrders(id)
             call.respond(
                 message = OrdersResponse(
                     msg = "Ok.",
@@ -47,7 +48,7 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
         }
         get("/unread") {
             val id = getIdFromToken()
-            val orders = orderService.readUnreadOrders(id)
+            val orders = orderService.getUnreadOrders(id)
             call.respond(
                 message = OrdersResponse(
                     msg = "Ok.",
@@ -58,7 +59,7 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
         get("/{id}") {
             val id = getIdFromToken()
             val pathID = getPathParameter("id")?.toLong() ?: -1
-            val order = orderService.readOrder(id, pathID) ?: throw NotFoundException()
+            val order = orderService.getOrder(id, pathID) ?: throw NotFoundException()
             call.respond(
                 message = OrderResponse(
                     msg = "Ok.",
@@ -96,7 +97,6 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
                 )
                 return@post
             }
-            val images = requestOrder.images
             if (!requestOrder.isNotBlank) {
                 call.respond(
                     message = BaseResponse(
@@ -115,17 +115,21 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
                 )
                 return@post
             }
+            var orderID: Long? = null
             if (requestOrder.orderID != null) {
-                orderService.readOrder(id, requestOrder.orderID) ?: throw NotFoundException()
+                orderService.getOrder(id, requestOrder.orderID) ?: throw NotFoundException()
                 orderService.update(requestOrder.orderID, requestOrder)
             } else {
-                orderService.create(id, requestOrder)
+                orderID = orderService.create(id, requestOrder)
             }
             call.respond(
                 message = BaseResponse(
                     msg = "Ok.",
                 ),
             )
+            orderID?.let {
+                TelegramBot.sendCreateOrder(it)
+            }
         }
         post("/read") {
             val id = getIdFromToken()
@@ -180,7 +184,7 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
                 )
                 return@post
             }
-            val existsOrder = orderService.readOrder(id, order.orderID) ?: throw NotFoundException()
+            val existsOrder = orderService.getOrder(id, order.orderID) ?: throw NotFoundException()
             if (existsOrder.state != OrderState.DOCTOR_RESPONSE) {
                 call.respond(
                     message = BaseResponse(
@@ -197,6 +201,7 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
                     msg = "Ok.",
                 ),
             )
+            TelegramBot.sendInsoleOrder(order)
         }
     }
 }

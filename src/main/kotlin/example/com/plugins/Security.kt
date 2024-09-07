@@ -2,11 +2,13 @@ package example.com.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import example.com.data.model.NormalSMS
 import example.com.data.model.RequestSMS
 import example.com.data.model.exception.AuthorizationException
 import example.com.data.schema.AdminUserService
+import example.com.routes.SMS_NORMAL_URL
 import example.com.routes.SMS_PANEL_API
-import example.com.routes.SMS_PANEL_URL
+import example.com.routes.SMS_PATTERN_URL
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -163,18 +165,28 @@ inline fun <reified T : Any> sendPostRequest(
     return false
 }
 
-fun buildRequestSMS(recipient: String, otp: Int, hash: String) = RequestSMS(
-    code = "yrcb63deur93gml",
-    recipient = recipient,
-    sender = "+983000505",
-    variable = RequestSMS.Variable(
-        hash = hash, otp = otp
+fun sendOTPRequest(recipient: String, otp: Int, hash: String): Boolean = sendPostRequest(
+    url = SMS_PATTERN_URL,
+    body = RequestSMS(
+        code = "yrcb63deur93gml",
+        recipient = recipient,
+        sender = "+983000505",
+        variable = RequestSMS.Variable(
+            hash = hash, otp = otp
+        )
+    ),
+    headers = mapOf(
+        "apikey" to SMS_PANEL_API
     )
 )
 
-fun sendSMSRequest(recipient: String, otp: Int, hash: String): Boolean = sendPostRequest(
-    url = SMS_PANEL_URL,
-    body = buildRequestSMS(recipient, otp, hash),
+fun sendStateMessage(recipient: String, msg: String): Boolean = sendPostRequest(
+    url = SMS_NORMAL_URL,
+    body = NormalSMS(
+        recipient = listOf(recipient),
+        sender = "+983000505",
+        message = msg
+    ),
     headers = mapOf(
         "apikey" to SMS_PANEL_API
     )
