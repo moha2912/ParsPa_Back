@@ -40,7 +40,7 @@ fun Application.configureRouting() {
             call.respond(
                 status = HttpStatusCode.OK,
                 message = BaseResponse(
-                    msg = "ParsPa-AI API v1.1"
+                    msg = "ParsPa-AI API v1.2"
                 )
             )
         }

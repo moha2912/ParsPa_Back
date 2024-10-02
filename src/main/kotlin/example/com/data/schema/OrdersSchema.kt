@@ -42,13 +42,17 @@ data class ExposedOrder(
         get():Boolean {
             return Foots.entries.all { foot ->
                 val map = images[foot] ?: return@all false
-                Angles.entries
-                    .take(foot.count * 2)
-                    .all {
-                        map[it]
-                            .isNullOrBlank()
-                            .not()
-                    }
+
+                if (foot == Foots.KNEE) map[Angles.FRONT]
+                    .isNullOrBlank()
+                    .not() else
+                    Angles.entries
+                        .take(4)
+                        .all {
+                            map[it]
+                                .isNullOrBlank()
+                                .not()
+                        }
             }
         }
 
@@ -294,16 +298,16 @@ class OrderService(
 }
 
 @Serializable
-enum class Foots(val count: Int) {
-    RIGHT(2),
-    LEFT(2),
-    KNEES(1),
+enum class Foots {
+    FOOTS(),
+    KNEE(),
 }
 
 @Serializable
 enum class Angles {
-    FRONT,
-    BACK,
+    RIGHT,
+    LEFT,
     UPSIDE,
-    INSIDE,
+    BACK,
+    FRONT,
 }
