@@ -6,7 +6,11 @@ import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.handlers.TextHandlerEnvironment
 import com.github.kotlintelegrambot.entities.ChatId
+import example.com.data.model.ZibalVerifyResponse
+import example.com.data.schema.ExposedUser
 import example.com.routes.InsoleRequest
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 private const val SELF_ID = 5067903470L
 private const val MOHA_ID = 548307881L
@@ -64,6 +68,31 @@ object TelegramBot {
             appendLine(order1.orderID)
             append("تعداد کفی: ")
             appendLine(order1.count)
+        }
+        ADMIN_IDs.forEach {
+            //parsBot.sendMessage(ChatId.fromId(it), message)
+        }
+    }
+
+    fun sendCreatedPayment(user: ExposedUser, insoleRequest: InsoleRequest, amount: Long) {
+        val message = buildString {
+            appendLine("ایجاد درگاه پرداخت")
+            append("شماره سفارش: ")
+            appendLine(insoleRequest.orderID)
+            append("تعداد کفی: ")
+            appendLine(insoleRequest.count)
+            append("مبلغ کل: ")
+            appendLine(amount)
+        }
+        ADMIN_IDs.forEach {
+            //parsBot.sendMessage(ChatId.fromId(it), message)
+        }
+    }
+
+    fun sendVerifiedPayment(zibalVerify: ZibalVerifyResponse) {
+        val message = buildString {
+            appendLine("پرداخت موفق")
+            append(Json.encodeToString(zibalVerify))
         }
         ADMIN_IDs.forEach {
             //parsBot.sendMessage(ChatId.fromId(it), message)

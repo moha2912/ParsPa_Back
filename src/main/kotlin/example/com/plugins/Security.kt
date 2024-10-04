@@ -2,13 +2,10 @@ package example.com.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import example.com.data.model.NormalSMS
-import example.com.data.model.RequestSMS
+import example.com.*
+import example.com.data.model.*
 import example.com.data.model.exception.AuthorizationException
 import example.com.data.schema.AdminUserService
-import example.com.routes.SMS_NORMAL_URL
-import example.com.routes.SMS_PANEL_API
-import example.com.routes.SMS_PATTERN_URL
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -164,6 +161,80 @@ inline fun <reified T : Any> sendPostRequest(
     }
     return false
 }
+
+val json = Json {
+    ignoreUnknownKeys = true
+}
+
+inline fun <reified T : Any, reified M : Any> sendPostRequestModel(
+    url: String,
+    body: T,
+    headers: Map<String, String> = emptyMap(),
+): M? {
+    try {
+        val requestBodyJson = Json.encodeToString(body)
+        val urlConnection = URL(url).openConnection() as HttpURLConnection
+        urlConnection.requestMethod = "POST"
+        urlConnection.setRequestProperty("Content-Type", "application/json")
+        headers.forEach {
+            urlConnection.setRequestProperty(it.key, it.value)
+        }
+        urlConnection.useCaches = false
+        urlConnection.doInput = true
+        urlConnection.doOutput = true
+        urlConnection.outputStream.use { outputStream ->
+            BufferedWriter(OutputStreamWriter(outputStream)).use { writer ->
+                writer.write(requestBodyJson)
+                writer.flush()
+            }
+        }
+        urlConnection.connect()
+        if (urlConnection.responseCode in 200..299) {
+            try {
+                val responseJson = urlConnection.inputStream
+                    .bufferedReader()
+                    .readText()
+                return json.decodeFromString(responseJson)
+            } catch (e: Exception) {
+                println(e.stackTraceToString())
+            }
+        }
+        val errorResponse = urlConnection.errorStream
+            ?.bufferedReader()
+            ?.readText()
+        println("Error response: $errorResponse")
+    } catch (e: Exception) {
+        println(e.stackTraceToString())
+    }
+    return null
+}
+
+fun createPayRequest(
+    merchant: String,
+    amount: Long,
+    desc: String,
+    phone: String
+): ZibalRequestStatus? = sendPostRequestModel(
+    url = ZIBAL_REQUEST_URL,
+    body = ZibalRequest(
+        amount = amount,
+        callbackUrl = PAYMENT_ADDRESS,
+        description = desc,
+        merchant = merchant,
+        mobile = phone
+    )
+)
+
+fun verifyPayment(
+    trackID: Long,
+    merchant: String,
+): ZibalVerifyResponse? = sendPostRequestModel(
+    url = ZIBAL_VERIFY_URL,
+    body = ZibalVerify(
+        merchant = merchant,
+        trackId = trackID
+    )
+)
 
 fun sendOTPRequest(recipient: String, otp: Int, hash: String): Boolean = sendPostRequest(
     url = SMS_PATTERN_URL,

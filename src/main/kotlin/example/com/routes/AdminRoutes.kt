@@ -4,10 +4,7 @@ import example.com.data.model.OrderState
 import example.com.data.model.res.AdminUserResponse
 import example.com.data.model.res.BaseResponse
 import example.com.data.model.res.OrdersResponse
-import example.com.data.schema.AdminUserService
-import example.com.data.schema.OrderService
-import example.com.data.schema.UserService
-import example.com.data.schema.VersionsService
+import example.com.data.schema.*
 import example.com.plugins.*
 import io.ktor.http.*
 import io.ktor.server.application.*

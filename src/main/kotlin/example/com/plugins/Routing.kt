@@ -19,11 +19,14 @@ fun Application.configureRouting() {
         val adminUserService = AdminUserService(database)
         val otpService = OTPService(database)
         val orderService = OrderService(database)
+        val financialService = FinancialService(database)
         val orderStatesService = OrderStateService(database)
+        val financeStatesService = FinanceStateService(database)
         val versionService = VersionsService(database)
 
         runBlocking {
             orderStatesService.addStates()
+            financeStatesService.addStates()
         }
         /*intercept(Plugins) {
             versionService.create(
@@ -40,16 +43,17 @@ fun Application.configureRouting() {
             call.respond(
                 status = HttpStatusCode.OK,
                 message = BaseResponse(
-                    msg = "ParsPa-AI API v1.2"
+                    msg = "ParsPa-AI API v1.3"
                 )
             )
         }
 
+        paymentRoutes(userService, orderService, financialService)
         versionRoutes(versionService)
         userRoutes(userService, otpService)
         adminRoutes(adminUserService, versionService, userService, orderService)
         authenticate {
-            orderRoutes(userService, orderService)
+            orderRoutes(userService, orderService, financialService)
             uploadRoutes()
         }
     }

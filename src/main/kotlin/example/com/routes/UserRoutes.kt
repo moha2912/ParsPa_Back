@@ -20,10 +20,6 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-const val SMS_PATTERN_URL = "https://api2.ippanel.com/api/v1/sms/pattern/normal/send"
-const val SMS_NORMAL_URL = "https://api2.ippanel.com/api/v1/sms/send/webservice/single"
-const val SMS_PANEL_API = "UP63w9369jXeDkCxJBr1FmVkk6QHYP2S1aKmrxLHo-E="
-
 val smsRateLimit = mutableMapOf<String, Long>()
 val otpRequests = mutableMapOf<String, Int>()
 val OTP_TIME = TimeUnit.MINUTES.toMillis(2)

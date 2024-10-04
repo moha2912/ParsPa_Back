@@ -148,6 +148,7 @@ class OrderService(
             Orders
                 .selectAll()
                 .where { Orders.userId eq id }
+                .sortedByDescending { it[Orders.created] }
                 .map {
                     it.toOrder()
                 }

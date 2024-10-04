@@ -1,13 +1,16 @@
 package example.com.routes
 
 import app.bot.TelegramBot
+import example.com.ZIBAL_MERCHANT
+import example.com.ZIBAL_START_URL
 import example.com.data.model.OrderState
+import example.com.data.model.exception.DetailedException
 import example.com.data.model.res.BaseResponse
 import example.com.data.model.res.OrderResponse
 import example.com.data.model.res.OrdersResponse
-import example.com.data.schema.ExposedOrder
-import example.com.data.schema.OrderService
-import example.com.data.schema.UserService
+import example.com.data.model.res.PaymentResponse
+import example.com.data.schema.*
+import example.com.plugins.createPayRequest
 import example.com.plugins.getIdFromToken
 import example.com.plugins.getPathParameter
 import io.ktor.http.*
@@ -19,6 +22,13 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import java.text.DecimalFormat
+
+const val INSOLE_PRICE = 18000L
+val INSOLE_PRICE_FORMATTED = DecimalFormat
+    .getInstance()
+    .format(INSOLE_PRICE)
+    .plus(" تومان")
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
@@ -34,7 +44,11 @@ data class ReadOrderRequest(
     val orderID: Long,
 )
 
-fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
+fun Route.orderRoutes(
+    userService: UserService,
+    orderService: OrderService,
+    financialService: FinancialService,
+) {
     route("/orders") {
         get {
             val id = getIdFromToken()
@@ -195,13 +209,41 @@ fun Route.orderRoutes(userService: UserService, orderService: OrderService) {
                 return@post
             }
 
-            orderService.addInsole(order)
+            val user = userService.readID(id) ?: throw DetailedException("User unavailable")
+            val amount = order.count * INSOLE_PRICE * 10
+            val request = createPayRequest(
+                merchant = ZIBAL_MERCHANT,
+                amount = amount,
+                desc = "سفارش کفی اختصاصی ${user.name}",
+                phone = user.phone ?: ""
+            )
+            request ?: throw DetailedException("Payment unavailable")
+            if (request.result != 100) throw DetailedException("Payment unavailable")
+            financialService.create(
+                ExposedFinance(
+                    date = System.currentTimeMillis(),
+                    trackID = request.trackId,
+                    userID = id,
+                    orderID = order.orderID ?: -1,
+                    insole = order,
+                )
+            )
+
+            call.respond(
+                message = PaymentResponse(
+                    link = ZIBAL_START_URL.plus(request.trackId),
+                    amount = amount
+                ),
+            )
+            TelegramBot.sendCreatedPayment(user, order, amount)
+
+            /*orderService.addInsole(order)
             call.respond(
                 message = BaseResponse(
                     msg = "Ok.",
                 ),
             )
-            TelegramBot.sendInsoleOrder(order)
+            TelegramBot.sendInsoleOrder(order)*/
         }
     }
 }
