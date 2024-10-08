@@ -25,7 +25,8 @@ data class ExposedOrder(
     @EncodeDefault(EncodeDefault.Mode.NEVER) val userID: Long? = null,
     val created: Long? = null,
     val feetLength: Float,
-    val feetSize: Int,
+    val feetSize: Float,
+    val gender: Short,
     val weight: Float,
     val state: OrderState = OrderState.PROCESSING,
     val notes: String? = "",
@@ -76,6 +77,7 @@ fun ResultRow.toOrder(fillAdmin: Boolean = false) = ExposedOrder(
     created = this[Orders.created],
     feetLength = this[Orders.feetLength],
     feetSize = this[Orders.feetSize],
+    gender = this[Orders.gender],
     weight = this[Orders.weight],
     isNew = this[Orders.isNew],
     doctorResponse = this[Orders.doctorResponse],
@@ -97,7 +99,8 @@ class OrderService(
         val created = long("created")
         val userId = long("user_id") references UserService.Users.id
         val feetLength = float("feet_length")
-        val feetSize = integer("feet_size").default(0)
+        val feetSize = float("feet_size").default(0f)
+        val gender = short("gender").default(0)
         val weight = float("weight")
         val images = text("images")//.default("")
         val concerns = text("concerns")//.default("[]")
@@ -132,6 +135,7 @@ class OrderService(
             it[userId] = userID
             it[feetLength] = order.feetLength
             it[feetSize] = order.feetSize
+            it[gender] = order.gender
             it[weight] = order.weight
             it[images] = Json.encodeToString(order.images)
             order.concerns?.let { n ->
@@ -248,6 +252,7 @@ class OrderService(
             Orders.update({ Orders.id eq id }) {
                 it[feetLength] = order.feetLength
                 it[feetSize] = order.feetSize
+                it[gender] = order.gender
                 it[weight] = order.weight
                 it[status] = OrderState.PROCESSING.name
                 it[resendPictures] = null

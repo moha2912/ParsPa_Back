@@ -2,6 +2,7 @@ package example.com
 
 import example.com.plugins.*
 import io.ktor.server.application.*
+import java.text.DecimalFormat
 import java.util.*
 
 const val USERS_FOLDER = "users/"
@@ -22,7 +23,13 @@ const val SMS_PANEL_API = "UP63w9369jXeDkCxJBr1FmVkk6QHYP2S1aKmrxLHo-E="
 const val ZIBAL_REQUEST_URL = "https://gateway.zibal.ir/v1/request"
 const val ZIBAL_START_URL = "https://gateway.zibal.ir/start/"
 const val ZIBAL_VERIFY_URL = "https://gateway.zibal.ir/v1/verify"
-const val ZIBAL_MERCHANT = "zibal"
+const val ZIBAL_MERCHANT = "66e5b33c6f3803001dcebea1"
+
+const val INSOLE_PRICE = 1000L
+val INSOLE_PRICE_FORMATTED = DecimalFormat
+    .getInstance()
+    .format(INSOLE_PRICE)
+    .plus(" تومان")
 
 fun main(args: Array<String>) {
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tehran"))

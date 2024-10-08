@@ -17,7 +17,7 @@ data class ZibalVerifyResponse(
     val orderId: String? = null,
     val multiplexingInfos: List<String>? = null,
     val paidAt: String? = null,
-    val refNumber: Int? = null,
+    val refNumber: Long? = null,
     val result: Int,
     val status: Int? = null,
 )

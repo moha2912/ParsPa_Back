@@ -1,10 +1,7 @@
 package example.com.routes
 
 import app.bot.TelegramBot
-import example.com.DEEPLINK_ERROR
-import example.com.DEEPLINK_SUCCESS
-import example.com.PAYMENT_ROUTE
-import example.com.ZIBAL_MERCHANT
+import example.com.*
 import example.com.data.model.res.PaymentResultResponse
 import example.com.data.model.res.PriceResponse
 import example.com.data.schema.FinanceState

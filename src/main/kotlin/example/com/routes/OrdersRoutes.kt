@@ -1,6 +1,7 @@
 package example.com.routes
 
 import app.bot.TelegramBot
+import example.com.INSOLE_PRICE
 import example.com.ZIBAL_MERCHANT
 import example.com.ZIBAL_START_URL
 import example.com.data.model.OrderState
@@ -22,13 +23,6 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import java.text.DecimalFormat
-
-const val INSOLE_PRICE = 18000L
-val INSOLE_PRICE_FORMATTED = DecimalFormat
-    .getInstance()
-    .format(INSOLE_PRICE)
-    .plus(" تومان")
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
@@ -102,10 +96,28 @@ fun Route.orderRoutes(
                 )
                 return@post
             }
-            if (requestOrder.feetSize !in 30..50) {
+            if (requestOrder.feetSize !in 30f..50f) {
                 call.respond(
                     message = BaseResponse(
                         msg = "Feet size must between 30-50.",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
+            if (requestOrder.feetSize.mod(0.5f) != 0f) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Feet size must be with 0.5 precision",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
+            if (requestOrder.gender !in 0..1) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Gender must be 0(Male) or 1(Female)",
                     ),
                     status = HttpStatusCode.BadRequest
                 )
@@ -210,7 +222,7 @@ fun Route.orderRoutes(
             }
 
             val user = userService.readID(id) ?: throw DetailedException("User unavailable")
-            val amount = order.count * INSOLE_PRICE * 10
+            val amount = order.count * INSOLE_PRICE * 10L
             val request = createPayRequest(
                 merchant = ZIBAL_MERCHANT,
                 amount = amount,
@@ -219,6 +231,7 @@ fun Route.orderRoutes(
             )
             request ?: throw DetailedException("Payment unavailable")
             if (request.result != 100) throw DetailedException("Payment unavailable")
+            financialService.updateError(order.orderID)
             financialService.create(
                 ExposedFinance(
                     date = System.currentTimeMillis(),

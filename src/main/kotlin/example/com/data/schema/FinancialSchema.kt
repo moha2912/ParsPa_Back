@@ -126,7 +126,18 @@ class FinancialService(
         }
     }
 
+    suspend fun updateError(orderID: Long?) {
+        orderID ?: return
+        dbQuery {
+            // todo notEq success
+            Financial.update({ Financial.orderID.eq(orderID)/* and Financial.status.*/ }) {
+                it[status] = FinanceState.ERROR.name
+            }
+        }
+    }
+
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
+
 }
 
