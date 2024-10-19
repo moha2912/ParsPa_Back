@@ -6,6 +6,7 @@ import java.text.DecimalFormat
 import java.util.*
 
 const val USERS_FOLDER = "users/"
+const val MAIN_DOMAIN = "https://parspa-ai.ir/"
 const val API_DOMAIN = "https://api.parspa-ai.ir/"
 const val PAYMENT_ROUTE = "payment"
 const val PAYMENT_ADDRESS = "$API_DOMAIN$PAYMENT_ROUTE"
@@ -13,8 +14,8 @@ const val PAYMENT_ADDRESS = "$API_DOMAIN$PAYMENT_ROUTE"
 const val DL_HOST = "https://dl.parspa-ai.ir/"
 const val DL_PATH = "/var/www/downloads/"
 
-const val DEEPLINK_ERROR = "parspa://payment/error"
-const val DEEPLINK_SUCCESS = "parspa://payment/success"
+const val DEEPLINK_ERROR = "${MAIN_DOMAIN}payment.php"
+const val DEEPLINK_SUCCESS = "${MAIN_DOMAIN}payment.php"
 
 const val SMS_PATTERN_URL = "https://api2.ippanel.com/api/v1/sms/pattern/normal/send"
 const val SMS_NORMAL_URL = "https://api2.ippanel.com/api/v1/sms/send/webservice/single"
