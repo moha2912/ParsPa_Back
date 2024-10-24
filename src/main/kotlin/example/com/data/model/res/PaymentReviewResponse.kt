@@ -8,5 +8,6 @@ data class PaymentReviewResponse(
     val insole: InsoleRequest,
     val date: Long,
     val card: String,
+    val refNum: Long,
     val total: Long
 )

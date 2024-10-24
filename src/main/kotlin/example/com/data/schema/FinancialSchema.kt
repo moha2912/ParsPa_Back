@@ -107,6 +107,18 @@ class FinancialService(
         }
     }
 
+    suspend fun readOrderID(orderID: Long, status: FinanceState): ExposedFinance? {
+        return dbQuery {
+            Financial
+                .selectAll()
+                .where { Financial.orderID.eq(orderID) and Financial.status.eq(status.name) }
+                .map {
+                    it.getExposedFinance()
+                }
+                .maxByOrNull { it.date }
+        }
+    }
+
     suspend fun update(exposedFinance: ExposedFinance) {
         dbQuery {
             Financial.update({ Financial.trackID eq exposedFinance.trackID }) {

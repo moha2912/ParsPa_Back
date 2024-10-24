@@ -78,12 +78,13 @@ fun Route.paymentRoutes(
             get("/{id}") {
                 val id = getIdFromToken()
                 val orderID = getPathParameter("id")?.toLongOrNull() ?: throw NotFoundException()
-                val finance = financialService.readOrderID(orderID, id) ?: throw NotFoundException()
+                val finance = financialService.readOrderID(orderID, FinanceState.SUCCESS) ?: throw NotFoundException()
                 call.respond(
                     message = PaymentReviewResponse(
                         date = finance.successDate ?: -1,
                         insole = finance.insole,
                         card = finance.zibal?.cardNumber ?: "",
+                        refNum = finance.zibal?.refNumber ?: -1,
                         total = (finance.zibal?.amount ?: 10) / 10
                     ),
                 )
