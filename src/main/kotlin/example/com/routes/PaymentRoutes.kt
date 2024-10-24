@@ -3,6 +3,7 @@ package example.com.routes
 import app.bot.TelegramBot
 import example.com.*
 import example.com.data.model.res.PaymentResultResponse
+import example.com.data.model.res.PaymentReviewResponse
 import example.com.data.model.res.PriceResponse
 import example.com.data.schema.FinanceState
 import example.com.data.schema.FinancialService
@@ -14,6 +15,7 @@ import example.com.plugins.getQueryParameter
 import example.com.plugins.verifyPayment
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.plugins.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.encodeToString
@@ -37,7 +39,7 @@ fun Route.paymentRoutes(
                 if (verify.result == 100) {
                     financialService.update(finance.id, trackID, FinanceState.SUCCESS, verify)
                     orderService.addInsole(finance.insole)
-                    call.respondRedirect(DEEPLINK_SUCCESS) // todo redirect to webpage
+                    call.respondRedirect(DEEPLINK_SUCCESS)
                     TelegramBot.sendVerifiedPayment(verify)
                     TelegramBot.sendInsoleOrder(finance.insole)
                     return@get
@@ -70,6 +72,19 @@ fun Route.paymentRoutes(
                         },
                         successDate = finance?.successDate,
                         zibal = finance?.zibal
+                    ),
+                )
+            }
+            get("/{id}") {
+                val id = getIdFromToken()
+                val orderID = getPathParameter("id")?.toLongOrNull() ?: throw NotFoundException()
+                val finance = financialService.readOrderID(orderID, id) ?: throw NotFoundException()
+                call.respond(
+                    message = PaymentReviewResponse(
+                        date = finance.successDate ?: -1,
+                        insole = finance.insole,
+                        card = finance.zibal?.cardNumber ?: "",
+                        total = (finance.zibal?.amount ?: 10) / 10
                     ),
                 )
             }

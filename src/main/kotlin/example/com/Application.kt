@@ -26,7 +26,7 @@ const val ZIBAL_START_URL = "https://gateway.zibal.ir/start/"
 const val ZIBAL_VERIFY_URL = "https://gateway.zibal.ir/v1/verify"
 const val ZIBAL_MERCHANT = "66e5b33c6f3803001dcebea1"
 
-const val INSOLE_PRICE = 1000L
+const val INSOLE_PRICE = 1500000L
 val INSOLE_PRICE_FORMATTED = DecimalFormat
     .getInstance()
     .format(INSOLE_PRICE)
