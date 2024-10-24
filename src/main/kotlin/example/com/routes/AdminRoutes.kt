@@ -4,7 +4,10 @@ import example.com.data.model.OrderState
 import example.com.data.model.res.AdminUserResponse
 import example.com.data.model.res.BaseResponse
 import example.com.data.model.res.OrdersResponse
-import example.com.data.schema.*
+import example.com.data.schema.AdminUserService
+import example.com.data.schema.OrderService
+import example.com.data.schema.UserService
+import example.com.data.schema.VersionsService
 import example.com.plugins.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -13,8 +16,12 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 import java.rmi.ServerException
 
 @Serializable
@@ -47,6 +54,58 @@ fun Route.adminRoutes(
     orderService: OrderService
 ) {
     route("/admin") {
+        get("/updatePwa") {
+            call.respondText(
+                """
+                    <html>
+                        <body>
+                            <p>Update in <span id="timer">60</span> seconds...</p>
+                            <script>
+                                var timeLeft = 60;
+                                var timerElement = document.getElementById('timer');
+                                
+                                // هر ثانیه تایمر رو آپدیت می‌کنه
+                                var countdown = setInterval(function() {
+                                    if (timeLeft <= 0) {
+                                        clearInterval(countdown);
+                                    } else {
+                                        timeLeft--;
+                                        timerElement.innerHTML = timeLeft;
+                                    }
+                                }, 1000); // هر 1000 میلی‌ثانیه (1 ثانیه) اجرا میشه
+                            </script>
+                        </body>
+                    </html>
+                """, ContentType.Text.Html
+            )
+            executeCommand("/bin/bash /root/update_pwa.sh")
+        }
+        get("/updateLanding") {
+            call.respondText(
+                """
+                    <html>
+                        <body>
+                            <p>Update in <span id="timer">60</span> seconds...</p>
+                            <script>
+                                var timeLeft = 60;
+                                var timerElement = document.getElementById('timer');
+                                
+                                // هر ثانیه تایمر رو آپدیت می‌کنه
+                                var countdown = setInterval(function() {
+                                    if (timeLeft <= 0) {
+                                        clearInterval(countdown);
+                                    } else {
+                                        timeLeft--;
+                                        timerElement.innerHTML = timeLeft;
+                                    }
+                                }, 1000); // هر 1000 میلی‌ثانیه (1 ثانیه) اجرا میشه
+                            </script>
+                        </body>
+                    </html>
+                """, ContentType.Text.Html
+            )
+            executeCommand("/bin/bash /root/update_landing.sh")
+        }
         post("/login") {
             val user = call.receive<RequestLoginAdmin>()
             val adminUser =
@@ -151,5 +210,16 @@ fun Route.adminRoutes(
                 )
             }
         }
+    }
+}
+
+suspend fun executeCommand(command: String): String {
+    return withContext(Dispatchers.IO) {
+        val process = ProcessBuilder(command.split(" ")).start()
+        val reader = BufferedReader(InputStreamReader(process.inputStream))
+        val output = reader.readText()
+        reader.close()
+        process.waitFor()
+        output
     }
 }
