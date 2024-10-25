@@ -140,10 +140,12 @@ fun Route.adminRoutes(
             get("/orders") {
                 checkAdminUser(adminService)
                 val filter = getQueryParameter("filter")
+                val start = getQueryParameter("start")?.toLongOrNull() ?: 0
+                val end = getQueryParameter("end")?.toLongOrNull() ?: 0
                 call.respond(
                     message = OrdersResponse(
                         msg = "Ok.",
-                        orders = orderService.getAllOrders(filter)
+                        orders = orderService.getAllOrders(filter, start, end)
                     ),
                 )
             }

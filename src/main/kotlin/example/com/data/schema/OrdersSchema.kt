@@ -185,14 +185,21 @@ class OrderService(
         }
     }
 
-    suspend fun getAllOrders(filter: String?): List<ExposedOrder> {
+    suspend fun getAllOrders(filter: String?, start: Long, end: Long): List<ExposedOrder> {
         return dbQuery {
+            // افزودن شرط‌های لازم به صورت ترکیبی
             Orders
                 .selectAll()
-                .run {
-                    filter?.let {
-                        where { Orders.status.eq(it) }
-                    } ?: this
+                .where {
+                    listOfNotNull(
+                        filter?.let { Orders.status eq it },
+                        start
+                            .takeIf { it > 0 }
+                            ?.let { Orders.created greaterEq it },
+                        end
+                            .takeIf { it > 0 }
+                            ?.let { Orders.created lessEq it }
+                    ).reduceOrNull { acc, condition -> acc and condition } ?: Op.TRUE
                 }
                 .map {
                     it.toOrder(fillAdmin = true)
