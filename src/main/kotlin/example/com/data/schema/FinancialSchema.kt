@@ -119,6 +119,27 @@ class FinancialService(
         }
     }
 
+    suspend fun getAllFinances(start: Long, end: Long): List<ExposedFinance> {
+        return dbQuery {
+            Financial
+                .selectAll()
+                .where {
+                    listOfNotNull(
+                        Financial.status eq FinanceState.SUCCESS.name,
+                        start
+                            .takeIf { it > 0 }
+                            ?.let { Financial.successDate greaterEq it },
+                        end
+                            .takeIf { it > 0 }
+                            ?.let { Financial.successDate lessEq it }
+                    ).reduceOrNull { acc, condition -> acc and condition } ?: Op.TRUE
+                }
+                .map {
+                    it.getExposedFinance()
+                }
+        }
+    }
+
     suspend fun update(exposedFinance: ExposedFinance) {
         dbQuery {
             Financial.update({ Financial.trackID eq exposedFinance.trackID }) {

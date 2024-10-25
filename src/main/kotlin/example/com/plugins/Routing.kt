@@ -51,7 +51,7 @@ fun Application.configureRouting() {
         paymentRoutes(userService, orderService, financialService)
         versionRoutes(versionService)
         userRoutes(userService, otpService)
-        adminRoutes(adminUserService, versionService, userService, orderService)
+        adminRoutes(adminUserService, versionService, userService, orderService, financialService)
         authenticate {
             orderRoutes(userService, orderService, financialService)
             uploadRoutes()

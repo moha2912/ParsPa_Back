@@ -3,11 +3,9 @@ package example.com.routes
 import example.com.data.model.OrderState
 import example.com.data.model.res.AdminUserResponse
 import example.com.data.model.res.BaseResponse
+import example.com.data.model.res.FinancesResponse
 import example.com.data.model.res.OrdersResponse
-import example.com.data.schema.AdminUserService
-import example.com.data.schema.OrderService
-import example.com.data.schema.UserService
-import example.com.data.schema.VersionsService
+import example.com.data.schema.*
 import example.com.plugins.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -51,7 +49,8 @@ fun Route.adminRoutes(
     adminService: AdminUserService,
     versionsService: VersionsService,
     userService: UserService,
-    orderService: OrderService
+    orderService: OrderService,
+    financialService: FinancialService,
 ) {
     route("/admin") {
         get("/updatePwa") {
@@ -146,6 +145,20 @@ fun Route.adminRoutes(
                     message = OrdersResponse(
                         msg = "Ok.",
                         orders = orderService.getAllOrders(filter, start, end)
+                    ),
+                )
+            }
+            get("/finances") {
+                checkAdminUser(adminService)
+                val start = getQueryParameter("start")?.toLongOrNull() ?: 0
+                val end = getQueryParameter("end")?.toLongOrNull() ?: 0
+                val finances = financialService.getAllFinances(start, end)
+                call.respond(
+                    message = FinancesResponse(
+                        msg = "Ok.",
+                        amount = finances.sumOf { it.zibal?.amount ?: 0 },
+                        count = finances.sumOf { it.insole.count },
+                        finances = finances
                     ),
                 )
             }
