@@ -1,7 +1,6 @@
 package example.com.routes
 
 import app.bot.TelegramBot
-import example.com.INSOLE_PRICE
 import example.com.ZIBAL_MERCHANT
 import example.com.ZIBAL_START_URL
 import example.com.data.model.OrderState
@@ -42,6 +41,7 @@ fun Route.orderRoutes(
     userService: UserService,
     orderService: OrderService,
     financialService: FinancialService,
+    pricesService: PricesService,
 ) {
     route("/orders") {
         get {
@@ -222,7 +222,8 @@ fun Route.orderRoutes(
             }
 
             val user = userService.readID(id) ?: throw DetailedException("User unavailable")
-            val amount = order.count * INSOLE_PRICE * 10L
+            val price = pricesService.read("insole") ?: throw DetailedException("Server error!")
+            val amount = order.count * price.price * 10L
             val request = createPayRequest(
                 merchant = ZIBAL_MERCHANT,
                 amount = amount,

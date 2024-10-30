@@ -166,18 +166,17 @@ fun Route.adminRoutes(
                 checkAdminUser(adminService)
                 val order = call.receive<ChangeState>()
                 orderService.updateState(order)
-                val message = when (order.newState) {
-                    OrderState.ERROR_RESEND -> "درخواست شما در اپلیکیشن پارس پا رد شد، درخواست خود را ویرایش کنید." //todo Strings.rejectParsPa
-                    OrderState.DOCTOR_RESPONSE -> "درخواست شما در اپلیکیشن پارس پا پاسخ داده شد."
-                    OrderState.SENDING -> "سفارش کفی شما انجام و به آدرس تعیین شده شما ارسال شد. جهت بررسی وارد اپلیکیشن شوید."
-                    else -> "وضعیت درخواست شما در اپلیکیشن پارس پا تغییر پیدا کرد. جهت بررسی و ادامه وارد اپلیکیشن شوید."
-                }.plus("\nweb.parspa-ai.ir")
                 orderService
                     .adminGetOrder(order.orderID)
                     ?.let { // todo use JOIN
-                        userService.readID(it.userID)?.phone?.let {
-                            sendStateMessage(recipient = it, msg = message)
-                        }
+                        userService
+                            .readID(it.userID)
+                            ?.let {
+                                val phone = it.phone ?: return@let
+                                val name = it.name
+                                val message = "%s عزیز!\n%s\nweb.parspa-ai.ir".format(name, order.newState.msg)
+                                sendStateMessage(recipient = phone, msg = message)
+                            }
                     }
                 call.respond(
                     message = BaseResponse(

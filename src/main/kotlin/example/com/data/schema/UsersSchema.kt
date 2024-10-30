@@ -75,6 +75,19 @@ class UserService(
         }[Users.id]
     }
 
+    suspend fun getName(id: Long?): String? {
+        id ?: return null
+        return dbQuery {
+            Users
+                .selectAll()
+                .where { Users.id eq id }
+                .map {
+                    it.getExposedUser().name
+                }
+                .singleOrNull()
+        }
+    }
+
     suspend fun readID(id: Long?): ExposedUser? {
         id ?: return null
         return dbQuery {

@@ -1,10 +1,12 @@
 package example.com.data.model
 
-enum class OrderState {
+enum class OrderState(
+    val msg: String = ""
+) {
     PROCESSING,
-    ERROR_RESEND,
-    DOCTOR_RESPONSE,
+    ERROR_RESEND(Strings.STATE_RESEND),
+    DOCTOR_RESPONSE(Strings.STATE_RESPONSE),
     IN_PRODUCTION,
-    SENDING,
+    SENDING(Strings.STATE_SENDING),
     DELIVERED,
 }

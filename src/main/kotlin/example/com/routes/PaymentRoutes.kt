@@ -1,14 +1,15 @@
 package example.com.routes
 
 import app.bot.TelegramBot
-import example.com.*
+import example.com.DEEPLINK_ERROR
+import example.com.DEEPLINK_SUCCESS
+import example.com.PAYMENT_ROUTE
+import example.com.ZIBAL_MERCHANT
+import example.com.data.model.exception.DetailedException
 import example.com.data.model.res.PaymentResultResponse
 import example.com.data.model.res.PaymentReviewResponse
 import example.com.data.model.res.PriceResponse
-import example.com.data.schema.FinanceState
-import example.com.data.schema.FinancialService
-import example.com.data.schema.OrderService
-import example.com.data.schema.UserService
+import example.com.data.schema.*
 import example.com.plugins.getIdFromToken
 import example.com.plugins.getPathParameter
 import example.com.plugins.getQueryParameter
@@ -24,7 +25,8 @@ import kotlinx.serialization.json.Json
 fun Route.paymentRoutes(
     userService: UserService,
     orderService: OrderService,
-    financialService: FinancialService
+    financialService: FinancialService,
+    pricesService: PricesService
 ) {
     route("/$PAYMENT_ROUTE") {
         get {
@@ -51,11 +53,11 @@ fun Route.paymentRoutes(
         }
         authenticate {
             get("/price") {
-                // todo create database for prices
+                val price = pricesService.read("insole") ?: throw DetailedException("Server error")
                 call.respond(
                     message = PriceResponse(
-                        price = INSOLE_PRICE,
-                        priceFormatted = INSOLE_PRICE_FORMATTED
+                        price = price.price,
+                        priceFormatted = price.priceFormatted
                     )
                 )
             }

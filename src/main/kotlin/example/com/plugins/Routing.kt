@@ -23,6 +23,7 @@ fun Application.configureRouting() {
         val orderStatesService = OrderStateService(database)
         val financeStatesService = FinanceStateService(database)
         val versionService = VersionsService(database)
+        val pricesService = PricesService(database)
 
         runBlocking {
             orderStatesService.addStates()
@@ -48,12 +49,12 @@ fun Application.configureRouting() {
             )
         }
 
-        paymentRoutes(userService, orderService, financialService)
+        paymentRoutes(userService, orderService, financialService, pricesService)
         versionRoutes(versionService)
         userRoutes(userService, otpService)
         adminRoutes(adminUserService, versionService, userService, orderService, financialService)
         authenticate {
-            orderRoutes(userService, orderService, financialService)
+            orderRoutes(userService, orderService, financialService, pricesService)
             uploadRoutes()
         }
     }

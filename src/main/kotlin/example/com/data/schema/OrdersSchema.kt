@@ -185,6 +185,21 @@ class OrderService(
         }
     }
 
+    suspend fun getUserID(id: Long?): Long? {
+        id ?: return null
+        return dbQuery {
+            Orders
+                .selectAll()
+                .where {
+                    Orders.id.eq(id)
+                }
+                .map {
+                    it.toOrder().userID
+                }
+                .singleOrNull()
+        }
+    }
+
     suspend fun getAllOrders(filter: String?, start: Long, end: Long): List<ExposedOrder> {
         return dbQuery {
             // افزودن شرط‌های لازم به صورت ترکیبی
