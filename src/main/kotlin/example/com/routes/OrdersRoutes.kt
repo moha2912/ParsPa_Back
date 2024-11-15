@@ -27,6 +27,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class InsoleRequest(
     @EncodeDefault(EncodeDefault.Mode.NEVER) val orderID: Long? = null,
+    val postID: Long = 9123456789, //todo
+    val name: String = "کاربر عزیز", //todo
     val address: String,
     val phone: String,
     val count: Int,
@@ -78,6 +80,15 @@ fun Route.orderRoutes(
         post("/new") {
             val id = getIdFromToken()
             val requestOrder = call.receive<ExposedOrder>()
+            if (requestOrder.feetWidth !in 5f..15f) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Feet width must between 5-15 cm.",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
             if (requestOrder.feetLength !in 15f..40f) {
                 call.respond(
                     message = BaseResponse(
@@ -118,6 +129,24 @@ fun Route.orderRoutes(
                 call.respond(
                     message = BaseResponse(
                         msg = "Gender must be 0(Male) or 1(Female)",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
+            if (requestOrder.platform !in 0..1) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Platform must be 0(Application) or 1(WebApp)",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
+            if (requestOrder.age !in 1..100) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Age is not acceptable (1-100).",
                     ),
                     status = HttpStatusCode.BadRequest
                 )
@@ -183,6 +212,24 @@ fun Route.orderRoutes(
             }
 
             val order = call.receive<InsoleRequest>()
+            if (order.postID.toString().length != 10) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Post id length must be 10.",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
+            if (order.name.isBlank()) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Name cannot be empty.",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
             if (order.address.isBlank()) {
                 call.respond(
                     message = BaseResponse(

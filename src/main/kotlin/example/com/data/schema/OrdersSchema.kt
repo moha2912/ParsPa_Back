@@ -24,13 +24,16 @@ data class ExposedOrder(
     @EncodeDefault(EncodeDefault.Mode.NEVER) val orderID: Long? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val userID: Long? = null,
     val created: Long? = null,
+    val age: Int = 20, //todo
     val feetLength: Float,
+    val feetWidth: Float = 10f, //todo
     val feetSize: Float,
     val gender: Short,
     val weight: Float,
     val state: OrderState = OrderState.PROCESSING,
     val notes: String? = "",
     val isNew: Boolean = true,
+    val platform: Short = 0,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val isAdminNew: Boolean? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val insole: ExposedInsole? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val doctorResponse: String? = null,
@@ -67,7 +70,9 @@ data class ExposedOrder(
 
 @Serializable
 data class ExposedInsole(
+    val postID: Long = 0,
     val count: Int,
+    val name: String = "",
     val address: String,
     val phone: String,
 )
@@ -75,11 +80,14 @@ data class ExposedInsole(
 fun ResultRow.toOrder(fillAdmin: Boolean = false) = ExposedOrder(
     id = this[Orders.id],
     created = this[Orders.created],
+    feetWidth = this[Orders.feetWidth],
     feetLength = this[Orders.feetLength],
     feetSize = this[Orders.feetSize],
+    age = this[Orders.age],
     gender = this[Orders.gender],
     weight = this[Orders.weight],
     isNew = this[Orders.isNew],
+    platform = this[Orders.platform],
     doctorResponse = this[Orders.doctorResponse],
     notes = this[Orders.notes],
     state = OrderState.valueOf(this[Orders.status]),
@@ -99,7 +107,9 @@ class OrderService(
         val created = long("created")
         val userId = long("user_id") references UserService.Users.id
         val feetLength = float("feet_length")
+        val feetWidth = float("feet_width")
         val feetSize = float("feet_size").default(0f)
+        val age = integer("age").default(0)
         val gender = short("gender").default(0)
         val weight = float("weight")
         val images = text("images")//.default("")
@@ -107,6 +117,7 @@ class OrderService(
         val notes = text("notes")//.default("")
         val resendPictures = text("resend_pictures").nullable()
         val isNew = bool("is_new").default(true)
+        val platform = short("platform").default(0)
         val isAdminNew = bool("is_admin_new").default(true)
         val status = varchar(
             "status",
@@ -133,10 +144,13 @@ class OrderService(
         Orders.insert {
             it[created] = System.currentTimeMillis()
             it[userId] = userID
+            it[age] = order.age
+            it[feetWidth] = order.feetWidth
             it[feetLength] = order.feetLength
             it[feetSize] = order.feetSize
             it[gender] = order.gender
             it[weight] = order.weight
+            it[platform] = order.platform
             it[images] = Json.encodeToString(order.images)
             order.concerns?.let { n ->
                 it[concerns] = Json.encodeToString(n)
@@ -272,6 +286,8 @@ class OrderService(
     suspend fun update(id: Long, order: ExposedOrder) {
         dbQuery {
             Orders.update({ Orders.id eq id }) {
+                it[age] = order.age
+                it[feetWidth] = order.feetWidth
                 it[feetLength] = order.feetLength
                 it[feetSize] = order.feetSize
                 it[gender] = order.gender
