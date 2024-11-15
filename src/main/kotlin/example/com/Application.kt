@@ -4,6 +4,8 @@ import example.com.plugins.*
 import io.ktor.server.application.*
 import java.util.*
 
+var isDebug: Boolean = false
+var env: String = "dsvfb"
 const val USERS_FOLDER = "users/"
 const val MAIN_DOMAIN = "https://parspa-ai.ir/"
 const val API_DOMAIN = "https://api.parspa-ai.ir/"
@@ -23,9 +25,11 @@ const val SMS_PANEL_API = "UP63w9369jXeDkCxJBr1FmVkk6QHYP2S1aKmrxLHo-E="
 const val ZIBAL_REQUEST_URL = "https://gateway.zibal.ir/v1/request"
 const val ZIBAL_START_URL = "https://gateway.zibal.ir/start/"
 const val ZIBAL_VERIFY_URL = "https://gateway.zibal.ir/v1/verify"
-const val ZIBAL_MERCHANT = "66e5b33c6f3803001dcebea1"
+val ZIBAL_MERCHANT
+    get() = if (isDebug) "zibal" else "66e5b33c6f3803001dcebea1"
 
 fun main(args: Array<String>) {
+    isDebug = true
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tehran"))
     io.ktor.server.netty.EngineMain.main(args)
     //todo recursive remove otps in 10 min (otp doesnt need database table)
@@ -33,6 +37,10 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    env = environment.config
+        .propertyOrNull("ktor.environment")
+        ?.getString() ?: "sdvf"
+    isDebug = env == "development"
     // todo TelegramBot.prepare()
     configureCors()
     configureRateLimit()

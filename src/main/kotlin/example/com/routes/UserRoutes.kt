@@ -8,6 +8,7 @@ import example.com.data.model.res.UserResponse
 import example.com.data.schema.ExposedUser
 import example.com.data.schema.OTPService
 import example.com.data.schema.UserService
+import example.com.isDebug
 import example.com.plugins.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -32,7 +33,7 @@ fun Route.userRoutes(userService: UserService, otpService: OTPService) {
         post("/request") {
             val otpRequest = call.receive<OTPRequest>()
             val flavor = getFlavorHeader() // todo: change path for persian-native
-            val isDebug = getBoolHeader("debug") // todo: change path for persian-native
+            //val isDebug = getBoolHeader("debug") // todo: change path for persian-native
             val time = if (flavor.isPersian) SMS_OTP_TIME else OTP_TIME
             val field = otpRequest.field
             val hash = otpRequest.hash

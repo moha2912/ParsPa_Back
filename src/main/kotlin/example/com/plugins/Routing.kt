@@ -2,6 +2,7 @@ package example.com.plugins
 
 import example.com.data.model.res.BaseResponse
 import example.com.data.schema.*
+import example.com.env
 import example.com.routes.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -44,7 +45,7 @@ fun Application.configureRouting() {
             call.respond(
                 status = HttpStatusCode.OK,
                 message = BaseResponse(
-                    msg = "ParsPa-AI API v1.5"
+                    msg = "ParsPa-AI API v1.7".plus("($env)")
                 )
             )
         }
