@@ -22,6 +22,7 @@ data class ExposedUser(
     val address: String? = null,
     val appNotify: Boolean? = null,
     val smsNotify: Boolean? = null,
+    val intro: String? = "NOT_DEFINED",
 )
 
 fun ResultRow.getExposedUser(): ExposedUser = ExposedUser(
@@ -34,6 +35,7 @@ fun ResultRow.getExposedUser(): ExposedUser = ExposedUser(
     address = this[Users.address],
     appNotify = this[Users.appNotify],
     smsNotify = this[Users.smsNotify],
+    intro = this[Users.intro],
 )
 
 class UserService(
@@ -49,6 +51,10 @@ class UserService(
         val address = text("address").nullable()//.default("")
         val appNotify = bool("app_notify").default(true)
         val smsNotify = bool("sms_notify").default(true)
+        val intro = varchar(
+            "intro",
+            length = 30
+        ).default("NOT_DEFINED") references IntroductionStateService.IntroductionState.id
 
         override val primaryKey = PrimaryKey(id)
     }
@@ -151,6 +157,9 @@ class UserService(
                 }
                 user.appNotify?.let {
                     up[appNotify] = it
+                }
+                user.intro?.let {
+                    up[intro] = it
                 }
             }
         }

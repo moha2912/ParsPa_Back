@@ -16,20 +16,23 @@ fun Application.configureRouting() {
     install(Resources)
     routing {
         val database = ParsPaDatabase.connectDatabase()
-        val userService = UserService(database)
-        val adminUserService = AdminUserService(database)
-        val otpService = OTPService(database)
-        val orderService = OrderService(database)
-        val financialService = FinancialService(database)
         val orderStatesService = OrderStateService(database)
         val financeStatesService = FinanceStateService(database)
-        val versionService = VersionsService(database)
-        val pricesService = PricesService(database)
+        val introService = IntroductionStateService(database)
 
         runBlocking {
             orderStatesService.addStates()
             financeStatesService.addStates()
         }
+
+        val userService = UserService(database)
+        val adminUserService = AdminUserService(database)
+        val otpService = OTPService(database)
+        val orderService = OrderService(database)
+        val financialService = FinancialService(database)
+        val versionService = VersionsService(database)
+        val pricesService = PricesService(database)
+
         /*intercept(Plugins) {
             versionService.create(
                 ExposedVersion(
@@ -45,14 +48,14 @@ fun Application.configureRouting() {
             call.respond(
                 status = HttpStatusCode.OK,
                 message = BaseResponse(
-                    msg = "ParsPa-AI API v1.7".plus("($env)")
+                    msg = "ParsPa-AI API v1.7.1 ".plus("($env)")
                 )
             )
         }
 
         paymentRoutes(userService, orderService, financialService, pricesService)
         versionRoutes(versionService)
-        userRoutes(userService, otpService)
+        userRoutes(userService, otpService, introService)
         adminRoutes(adminUserService, versionService, userService, orderService, financialService)
         authenticate {
             orderRoutes(userService, orderService, financialService, pricesService)

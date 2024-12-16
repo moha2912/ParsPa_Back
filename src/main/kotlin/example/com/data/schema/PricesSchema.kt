@@ -55,13 +55,13 @@ class PricesService(
                 }
                 .map {
                     val price = it[Prices.price]
-                    Strings.CH
                     ExposedPrice(
                         price = price,
                         priceFormatted = DecimalFormat
                             .getInstance()
                             .format(price)
-                            .plus(" تومان"),
+                            .plus(" ")
+                            .plus(Strings.TOMAN)
                     )
                 }
                 .singleOrNull()

@@ -3,9 +3,11 @@ package example.com.routes
 import example.com.USERS_FOLDER
 import example.com.data.model.exception.DetailedException
 import example.com.data.model.res.BaseResponse
+import example.com.data.model.res.IntrosResponse
 import example.com.data.model.res.OTPResponse
 import example.com.data.model.res.UserResponse
 import example.com.data.schema.ExposedUser
+import example.com.data.schema.IntroductionStateService
 import example.com.data.schema.OTPService
 import example.com.data.schema.UserService
 import example.com.isDebug
@@ -28,7 +30,11 @@ val SMS_OTP_TIME = TimeUnit.MINUTES.toMillis(5)
 val RATE_LIMIT_DURATION = TimeUnit.HOURS.toMillis(6)
 const val MAX_ATTEMPTS = 2
 
-fun Route.userRoutes(userService: UserService, otpService: OTPService) {
+fun Route.userRoutes(
+    userService: UserService,
+    otpService: OTPService,
+    introductionStateService: IntroductionStateService
+) {
     route("/user") {
         post("/request") {
             val otpRequest = call.receive<OTPRequest>()
@@ -167,14 +173,14 @@ fun Route.userRoutes(userService: UserService, otpService: OTPService) {
             )
         }
         authenticate {
-            profileRoutes(userService)
+            profileRoutes(userService, introductionStateService)
         }
         // -----------------------------------------------------------------------
         //todo admin
     }
 }
 
-fun Route.profileRoutes(userService: UserService) {
+fun Route.profileRoutes(userService: UserService, introductionStateService: IntroductionStateService) {
     route("/avatar") {
         get {
             val id = getIdFromToken()
@@ -192,6 +198,14 @@ fun Route.profileRoutes(userService: UserService) {
                 fileName = filePath,
             )
         }
+    }
+    get("/intros") {
+        val id = getIdFromToken()
+        call.respond(
+            IntrosResponse(
+                intros = introductionStateService.getStates()
+            )
+        )
     }
     route("/profile") {
         get {
