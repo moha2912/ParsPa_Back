@@ -159,6 +159,7 @@ object TelegramBot {
     fun sendMessageStatus(s: String) {
         sendTelegramMessage(s)
         //parsBot.editMessageText(ChatId.fromId(ADMIN_ID), 784, text = s, parseMode = ParseMode.MARKDOWN_V2)
+        //parsBot.editMessageText(ChatId.fromId(ADMIN_ID), 784, text = s, parseMode = ParseMode.MARKDOWN_V2)
     }
 
     fun endBot() {
