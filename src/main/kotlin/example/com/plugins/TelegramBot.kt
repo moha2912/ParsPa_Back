@@ -41,7 +41,7 @@ object TelegramBot {
         parsBot.startPolling()
         val s = buildString {
             append("*")
-            append("راه اندازی سرور")
+            append("راه انداadsvfdbgfزی سرور")
             append("*")
             appendLine()
             append("\\#استارت")
