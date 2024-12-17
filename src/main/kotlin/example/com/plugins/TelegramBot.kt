@@ -41,7 +41,7 @@ object TelegramBot {
         parsBot.startPolling()
         val s = buildString {
             append("*")
-            append("راه انداadsvfdbgfزی سرور")
+            append("راه اندازی سرور")
             append("*")
             appendLine()
             append("\\#استارت")
@@ -158,7 +158,6 @@ object TelegramBot {
 
     fun sendMessageStatus(s: String) {
         sendTelegramMessage(s)
-        //parsBot.editMessageText(ChatId.fromId(ADMIN_ID), 784, text = s, parseMode = ParseMode.MARKDOWN_V2)
         //parsBot.editMessageText(ChatId.fromId(ADMIN_ID), 784, text = s, parseMode = ParseMode.MARKDOWN_V2)
     }
 
