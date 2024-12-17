@@ -171,12 +171,11 @@ fun Route.userRoutes(
                     )
                 )
             )
+            TelegramBot.sendLogin(field, otpRequest.platform)
         }
         authenticate {
             profileRoutes(userService, introductionStateService)
         }
-        // -----------------------------------------------------------------------
-        //todo admin
     }
 }
 
@@ -278,6 +277,7 @@ data class OTPRequest(
     val field: String,
     val code: Int? = null,
     val hash: String? = null,
+    val platform: Short? = 0,
 )
 
 

@@ -25,6 +25,7 @@ data class ExposedFinance(
     val trackID: Long,
     val userID: Long,
     val orderID: Long,
+    val platform: Short,
     val insole: InsoleRequest,
     val zibal: ZibalVerifyResponse? = null,
     val status: FinanceState = FinanceState.WAITING,
@@ -37,6 +38,7 @@ fun ResultRow.getExposedFinance(): ExposedFinance = ExposedFinance(
     trackID = this[FinancialService.Financial.trackID],
     userID = this[FinancialService.Financial.userID],
     orderID = this[FinancialService.Financial.orderID],
+    platform = this[FinancialService.Financial.platform],
     insole = this[FinancialService.Financial.insole].let { Json.decodeFromString(it) },
     zibal = this[FinancialService.Financial.zibal]?.let { Json.decodeFromString(it) },
     status = FinanceState.valueOf(this[FinancialService.Financial.status])
@@ -52,6 +54,7 @@ class FinancialService(
         val trackID = long("track_id")
         val userID = long("user_id")
         val orderID = long("order_id")
+        val platform = short("platform")
         val insole = text("insole")
         val zibal = text("zibal").nullable()
         val status = varchar(
@@ -79,6 +82,7 @@ class FinancialService(
             it[userID] = exposedFinance.userID
             it[insole] = Json.encodeToString(exposedFinance.insole)
             it[orderID] = exposedFinance.orderID
+            it[platform] = exposedFinance.platform
             it[status] = FinanceState.WAITING.name
         }
     }

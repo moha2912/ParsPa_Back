@@ -1,6 +1,6 @@
 package example.com.routes
 
-import app.bot.TelegramBot
+import example.com.plugins.TelegramBot
 import example.com.DL_HOST
 import example.com.DL_PATH
 import example.com.data.model.res.BaseResponse

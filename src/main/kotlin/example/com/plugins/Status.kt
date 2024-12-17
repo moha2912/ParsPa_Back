@@ -2,7 +2,7 @@ package example.com.plugins
 
 import example.com.data.model.exception.AuthorizationException
 import example.com.data.model.res.BaseResponse
-import io.ktor.client.plugins.*
+import example.com.isDebug
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
@@ -38,8 +38,14 @@ fun Application.configureStatusPages() {
                     )
                 }
                 is BadRequestException, is NullPointerException, is IllegalStateException -> {
+                    val msg = buildString {
+                        append("Bad request")
+                        if (isDebug) {
+                            appendLine(cause.stackTraceToString())
+                        }
+                    }
                     call.respond(
-                        message = BaseResponse("Bad request: ${cause.stackTraceToString()}"), //todo REMOVE MESSAGE AFTER DEBUG
+                        message = BaseResponse(msg),
                         status = HttpStatusCode.BadRequest
                     )
                 }

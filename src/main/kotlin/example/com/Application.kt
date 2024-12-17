@@ -9,8 +9,10 @@ var env: String = "dsvfb"
 const val USERS_FOLDER = "users/"
 const val MAIN_DOMAIN = "https://parspa-ai.ir/"
 const val API_DOMAIN = "https://api.parspa-ai.ir/"
+const val DEBUG_DOMAIN = "https://dev.parspa-ai.ir/"
 const val PAYMENT_ROUTE = "payment"
-const val PAYMENT_ADDRESS = "$API_DOMAIN$PAYMENT_ROUTE"
+const val PRD_PAYMENT_ADDRESS = "$API_DOMAIN$PAYMENT_ROUTE"
+const val DEV_PAYMENT_ADDRESS = "$DEBUG_DOMAIN$PAYMENT_ROUTE"
 
 const val DL_HOST = "https://dl.parspa-ai.ir/"
 const val DL_PATH = "/var/www/downloads/"
@@ -27,6 +29,8 @@ const val ZIBAL_START_URL = "https://gateway.zibal.ir/start/"
 const val ZIBAL_VERIFY_URL = "https://gateway.zibal.ir/v1/verify"
 val ZIBAL_MERCHANT
     get() = if (isDebug) "zibal" else "66e5b33c6f3803001dcebea1"
+val PAYMENT_ADDRESS
+    get() = if (isDebug) DEV_PAYMENT_ADDRESS else PRD_PAYMENT_ADDRESS
 
 fun main(args: Array<String>) {
     isDebug = true
@@ -41,7 +45,7 @@ fun Application.module() {
         .propertyOrNull("ktor.environment")
         ?.getString() ?: "sdvf"
     isDebug = env == "development"
-    // todo TelegramBot.prepare()
+    TelegramBot.prepare()
     configureCors()
     configureRateLimit()
     configureStatusPages()

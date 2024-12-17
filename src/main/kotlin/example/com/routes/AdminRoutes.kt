@@ -6,6 +6,7 @@ import example.com.data.model.res.BaseResponse
 import example.com.data.model.res.FinancesResponse
 import example.com.data.model.res.OrdersResponse
 import example.com.data.schema.*
+import example.com.isDebug
 import example.com.plugins.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -166,18 +167,20 @@ fun Route.adminRoutes(
                 checkAdminUser(adminService)
                 val order = call.receive<ChangeState>()
                 orderService.updateState(order)
-                orderService
-                    .adminGetOrder(order.orderID)
-                    ?.let { // todo use JOIN
-                        userService
-                            .readID(it.userID)
-                            ?.let {
-                                val phone = it.phone ?: return@let
-                                val name = it.name
-                                val message = "%s عزیز!\n%s\nweb.parspa-ai.ir".format(name, order.newState.msg)
-                                sendStateMessage(recipient = phone, msg = message)
-                            }
-                    }
+                if (!isDebug) {
+                    orderService
+                        .adminGetOrder(order.orderID)
+                        ?.let { // todo use JOIN
+                            userService
+                                .readID(it.userID)
+                                ?.let {
+                                    val phone = it.phone ?: return@let
+                                    val name = it.name
+                                    val message = "%s عزیز!\n%s\nweb.parspa-ai.ir".format(name, order.newState.msg)
+                                    sendStateMessage(recipient = phone, msg = message)
+                                }
+                        }
+                }
                 call.respond(
                     message = BaseResponse(
                         msg = "Ok.",

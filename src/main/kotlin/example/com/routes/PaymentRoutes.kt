@@ -1,6 +1,5 @@
 package example.com.routes
 
-import app.bot.TelegramBot
 import example.com.DEEPLINK_ERROR
 import example.com.DEEPLINK_SUCCESS
 import example.com.PAYMENT_ROUTE
@@ -10,10 +9,7 @@ import example.com.data.model.res.PaymentResultResponse
 import example.com.data.model.res.PaymentReviewResponse
 import example.com.data.model.res.PriceResponse
 import example.com.data.schema.*
-import example.com.plugins.getIdFromToken
-import example.com.plugins.getPathParameter
-import example.com.plugins.getQueryParameter
-import example.com.plugins.verifyPayment
+import example.com.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.plugins.*
@@ -39,11 +35,12 @@ fun Route.paymentRoutes(
                 println()
                 val finance = financialService.readID(trackID) ?: throw Exception()
                 if (verify.result == 100) {
+                    val user = userService.getPhone(finance.userID)
                     financialService.update(finance.id, trackID, FinanceState.SUCCESS, verify)
                     orderService.addInsole(finance.insole)
                     call.respondRedirect(DEEPLINK_SUCCESS)
-                    TelegramBot.sendVerifiedPayment(verify)
-                    TelegramBot.sendInsoleOrder(finance.insole)
+                    TelegramBot.sendVerifiedPayment(verify, finance, user)
+                    //TelegramBot.sendInsoleOrder()
                     return@get
                 } else if (verify.result == 202) {
                     financialService.update(finance.id, trackID, FinanceState.ERROR, verify)

@@ -1,6 +1,5 @@
 package example.com.routes
 
-import app.bot.TelegramBot
 import example.com.ZIBAL_MERCHANT
 import example.com.ZIBAL_START_URL
 import example.com.data.model.OrderState
@@ -10,6 +9,7 @@ import example.com.data.model.res.OrderResponse
 import example.com.data.model.res.OrdersResponse
 import example.com.data.model.res.PaymentResponse
 import example.com.data.schema.*
+import example.com.plugins.TelegramBot
 import example.com.plugins.createPayRequest
 import example.com.plugins.getIdFromToken
 import example.com.plugins.getPathParameter
@@ -32,6 +32,7 @@ data class InsoleRequest(
     val address: String,
     val phone: String,
     val count: Int,
+    val platform: Short = 0,
 )
 
 @Serializable
@@ -170,6 +171,7 @@ fun Route.orderRoutes(
                 )
                 return@post
             }
+            val phone = userService.getPhone(id)
             var orderID: Long? = null
             if (requestOrder.orderID != null) {
                 orderService.getOrder(id, requestOrder.orderID) ?: throw NotFoundException()
@@ -183,7 +185,7 @@ fun Route.orderRoutes(
                 ),
             )
             orderID?.let {
-                TelegramBot.sendCreateOrder(it)
+                TelegramBot.sendCreateOrder(it, phone, requestOrder.platform)
             }
         }
         post("/read") {
@@ -257,6 +259,15 @@ fun Route.orderRoutes(
                 )
                 return@post
             }
+            if (order.platform !in 0..1) {
+                call.respond(
+                    message = BaseResponse(
+                        msg = "Platform must be 0(Application) or 1(WebApp)",
+                    ),
+                    status = HttpStatusCode.BadRequest
+                )
+                return@post
+            }
             val existsOrder = orderService.getOrder(id, order.orderID) ?: throw NotFoundException()
             if (existsOrder.state != OrderState.DOCTOR_RESPONSE) {
                 call.respond(
@@ -286,6 +297,7 @@ fun Route.orderRoutes(
                     trackID = request.trackId,
                     userID = id,
                     orderID = order.orderID ?: -1,
+                    platform = order.platform,
                     insole = order,
                 )
             )
@@ -296,15 +308,7 @@ fun Route.orderRoutes(
                     amount = amount
                 ),
             )
-            TelegramBot.sendCreatedPayment(user, order, amount)
-
-            /*orderService.addInsole(order)
-            call.respond(
-                message = BaseResponse(
-                    msg = "Ok.",
-                ),
-            )
-            TelegramBot.sendInsoleOrder(order)*/
+            // TODO: TelegramBot.sendCreatedPayment(user, order, amount)
         }
     }
 }

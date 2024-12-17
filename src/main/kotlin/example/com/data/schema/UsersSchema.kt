@@ -107,6 +107,19 @@ class UserService(
         }
     }
 
+    suspend fun getPhone(id: Long?): String? {
+        id ?: return null
+        return dbQuery {
+            Users
+                .selectAll()
+                .where { Users.id eq id }
+                .map {
+                    it.getExposedUser()
+                }
+                .singleOrNull()?.phone
+        }
+    }
+
     suspend fun readEmail(email: String): ExposedUser? {
         return dbQuery {
             Users
