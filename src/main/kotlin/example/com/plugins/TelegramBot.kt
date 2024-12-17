@@ -149,8 +149,6 @@ object TelegramBot {
         val msg = message
             .plus("\n\\#")
             .plus(if (isDebug) "توسعه" else "محصول")
-        parsBot.sendMessage(ChatId.fromId(LOGS_CHANNEL), "sdfgfv")
-        parsBot.sendMessage(ChatId.fromId(SELF_ID), msg, parseMode = ParseMode.MARKDOWN_V2)
         parsBot.sendMessage(ChatId.fromId(LOGS_CHANNEL), msg, parseMode = ParseMode.MARKDOWN_V2)
     }
 
