@@ -181,6 +181,7 @@ object TelegramBot {
     }
 
     private fun sendTelegramMessage(message: String) {
+        if (isDebug && !sendDebug) return
         val msg = message
             .plus("\n\\#")
             .plus(if (isDebug) "توسعه" else "محصول")

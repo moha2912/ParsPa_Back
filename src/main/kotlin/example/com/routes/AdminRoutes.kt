@@ -1,6 +1,6 @@
 package example.com.routes
 
-import example.com.API_DOMAIN
+import example.com.DEBUG_DOMAIN
 import example.com.data.model.OrderState
 import example.com.data.model.res.AdminUserResponse
 import example.com.data.model.res.BaseResponse
@@ -58,9 +58,18 @@ fun Route.adminRoutes(
         get("/resetBot") {
             if (!isDebug) {
                 executeCommand("/bin/bash /root/reset_proxy.sh")
-                call.respondRedirect(API_DOMAIN.plus("admin/resetBot"))
+                call.respondRedirect(DEBUG_DOMAIN.plus("admin/resetBot"))
             }
             TelegramBot.sendBotMessage()
+            call.respondText(
+                """
+                    <html>
+                        <body>
+                            <h1>Resetting bot...</h1>
+                        </body>
+                    </html>
+                """, ContentType.Text.Html
+            )
         }
         get("/updatePwa") {
             call.respondText(
