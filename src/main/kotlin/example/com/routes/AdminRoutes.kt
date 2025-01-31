@@ -17,6 +17,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.io.BufferedReader
@@ -58,6 +59,7 @@ fun Route.adminRoutes(
         get("/resetBot") {
             if (!isDebug) {
                 executeCommand("/bin/bash /root/reset_proxy.sh")
+                delay(2000)
                 TelegramBot.sendBotMessage()
                 call.respondRedirect(DEBUG_DOMAIN.plus("admin/resetBot"))
             }
