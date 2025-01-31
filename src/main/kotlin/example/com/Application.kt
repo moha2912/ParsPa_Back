@@ -27,6 +27,9 @@ const val SMS_PANEL_API = "UP63w9369jXeDkCxJBr1FmVkk6QHYP2S1aKmrxLHo-E="
 const val ZIBAL_REQUEST_URL = "https://gateway.zibal.ir/v1/request"
 const val ZIBAL_START_URL = "https://gateway.zibal.ir/start/"
 const val ZIBAL_VERIFY_URL = "https://gateway.zibal.ir/v1/verify"
+
+const val RESET_BOT_URL = "${API_DOMAIN}/admin/resetBot"
+
 val ZIBAL_MERCHANT
     get() = if (isDebug) "zibal" else "66e5b33c6f3803001dcebea1"
 val PAYMENT_ADDRESS

@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter
 private const val SELF_ID = 5067903470L
 private const val MOHA_ID = 548307881L
 private const val LOGS_CHANNEL = -1002346633099L
+private var sendDebug = false
 
 object TelegramBot {
 
@@ -34,17 +35,51 @@ object TelegramBot {
                     text = "سلام کاربر ادمین!\n\nپیام های مربوط به سفارشات جدید یا خطاهای سرور در اینجا ارسال خواهند شد."
                 )
             }
+            command("debug") {
+                if (message.chat.id !in listOf(SELF_ID, MOHA_ID)) {
+                    bot.sendMessage(
+                        chatId = ChatId.fromId(message.chat.id),
+                        text = "شما دسترسی به این قسمت ندارید."
+                    )
+                    return@command
+                }
+                sendDebug = !sendDebug
+                bot.sendMessage(
+                    chatId = ChatId.fromId(message.chat.id),
+                    text = (if (sendDebug) "✅" else "❌")
+                        .plus(" ")
+                        .plus("پیام های مربوط به سرور توسعه ارسال")
+                        .plus(" ")
+                        .plus(if (sendDebug) "ن" else "")
+                        .plus("خواهند شد.")
+                )
+            }
         }
     }
 
     fun prepare() {
         parsBot.startPolling()
+        sendStartMessage()
+    }
+
+    private fun sendStartMessage() {
         val s = buildString {
             append("*")
             append("راه اندازی سرور")
             append("*")
             appendLine()
             append("\\#استارت")
+        }
+        sendTelegramMessage(s)
+    }
+
+    fun sendBotMessage() {
+        val s = buildString {
+            append("*")
+            append("راه اندازی ربات")
+            append("*")
+            appendLine()
+            append("\\#ربات")
         }
         sendTelegramMessage(s)
     }
