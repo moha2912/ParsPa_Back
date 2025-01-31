@@ -58,6 +58,7 @@ fun Route.adminRoutes(
         get("/resetBot") {
             if (!isDebug) {
                 executeCommand("/bin/bash /root/reset_proxy.sh")
+                TelegramBot.sendBotMessage()
                 call.respondRedirect(DEBUG_DOMAIN.plus("admin/resetBot"))
             }
             TelegramBot.sendBotMessage()
