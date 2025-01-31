@@ -30,12 +30,14 @@ object TelegramBot {
         proxy = ProxyBuilder.socks("127.0.0.1", 8081)
         dispatch {
             command("start") {
+                if (isDebug) return@command
                 bot.sendMessage(
                     chatId = ChatId.fromId(message.chat.id),
                     text = "سلام کاربر ادمین!\n\nپیام های مربوط به سفارشات جدید یا خطاهای سرور در اینجا ارسال خواهند شد."
                 )
             }
             command("debug") {
+                if (!isDebug) return@command
                 if (message.chat.id !in listOf(SELF_ID, MOHA_ID)) {
                     bot.sendMessage(
                         chatId = ChatId.fromId(message.chat.id),
