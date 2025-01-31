@@ -50,7 +50,7 @@ object TelegramBot {
                         .plus(" ")
                         .plus("پیام های مربوط به سرور توسعه ارسال")
                         .plus(" ")
-                        .plus(if (sendDebug) "ن" else "")
+                        .plus(if (!sendDebug) "ن" else "")
                         .plus("خواهند شد.")
                 )
             }
