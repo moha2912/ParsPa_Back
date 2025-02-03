@@ -12,6 +12,7 @@ import example.com.data.model.Strings
 import example.com.data.model.ZibalVerifyResponse
 import example.com.data.schema.ExposedFinance
 import example.com.data.schema.ExposedUser
+import example.com.env
 import example.com.isDebug
 import example.com.routes.InsoleRequest
 import io.ktor.client.engine.*
@@ -30,14 +31,12 @@ object TelegramBot {
         proxy = ProxyBuilder.socks("127.0.0.1", 8081)
         dispatch {
             command("start") {
-                if (isDebug) return@command
                 bot.sendMessage(
                     chatId = ChatId.fromId(message.chat.id),
-                    text = "سلام کاربر ادمین!\n\nپیام های مربوط به سفارشات جدید یا خطاهای سرور در اینجا ارسال خواهند شد."
+                    text = "سلام کاربر ادمین!\n\nپیام های مربوط به سفارشات جدید یا خطاهای سرور در اینجا ($env) ارسال خواهند شد."
                 )
             }
             command("debug") {
-                if (!isDebug) return@command
                 if (message.chat.id !in listOf(SELF_ID, MOHA_ID)) {
                     bot.sendMessage(
                         chatId = ChatId.fromId(message.chat.id),
@@ -61,7 +60,7 @@ object TelegramBot {
 
     fun prepare() {
         parsBot.startPolling()
-        sendStartMessage()
+        //sendStartMessage()
     }
 
     private fun sendStartMessage() {
