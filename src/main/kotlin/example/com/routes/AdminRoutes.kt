@@ -63,7 +63,7 @@ fun Route.adminRoutes(
         get("/updateArticle") {
             val taskId = UUID.randomUUID().toString()
             val outputFile = "/root/update_article_output_$taskId.log"
-            val scriptToRun = "/root/myscript.sh"
+            val scriptToRun = "/root/update_article.sh"
 
             activeTasks[taskId] = outputFile
 
