@@ -256,7 +256,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.sendExecuteCommand(
         """
                         <html>
                             <body>
-                                <p>Executing command...</p>
+                                <h1 id="header">Starting command...</p>
                                 <pre id="output"></pre>
                                 <script>
                                     var taskId = "$taskId";
@@ -268,6 +268,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.sendExecuteCommand(
                                                 document.getElementById('output').innerHTML = data;
                                                 if (data.includes("[Process completed]")) {
                                                     document.title = "Finished";
+                                                    document.getElementById('header').innerHTML = "Finished!";
                                                 } else {
                                                     setTimeout(checkStatus, 5000);
                                                 }
