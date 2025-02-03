@@ -4,6 +4,8 @@ import example.com.data.model.res.BaseResponse
 import example.com.data.schema.*
 import example.com.env
 import example.com.routes.*
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*

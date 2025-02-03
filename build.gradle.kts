@@ -42,6 +42,8 @@ ktor {
 }
 
 dependencies {
+    implementation("io.ktor:ktor-client-core")
+    implementation("io.ktor:ktor-client-cio")
     implementation("io.ktor:ktor-server-cors")
     implementation("io.ktor:ktor-server-rate-limit")
     implementation("mysql:mysql-connector-java:8.0.33")

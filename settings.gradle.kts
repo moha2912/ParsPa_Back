@@ -1,1 +1,1 @@
-rootProject.name = "self.mp.ktor-physio"
+rootProject.name = "ParsPa-KTOR"

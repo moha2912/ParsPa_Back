@@ -24,6 +24,8 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.rmi.ServerException
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 @Serializable
 data class RequestLoginAdmin(
@@ -48,6 +50,8 @@ data class UploadApp(
     val lastChanges: String,
 )
 
+val runningProcesses = ConcurrentHashMap<String, Process>()
+
 fun Route.adminRoutes(
     adminService: AdminUserService,
     versionsService: VersionsService,
@@ -56,6 +60,64 @@ fun Route.adminRoutes(
     financialService: FinancialService,
 ) {
     route("/admin") {
+        get("/updateArticle") {
+            val taskId = UUID
+                .randomUUID().toString() // یک شناسه یکتا برای هر پردازش
+
+            // شروع اجرای دستور در پس‌زمینه
+            val process = ProcessBuilder("/bin/bash", "/root/update_article.sh").start()
+            runningProcesses[taskId] = process
+
+            call.respondText(
+                """
+                        <html>
+                            <body>
+                                <p>Executing command...</p>
+                                <pre id="output"></pre>
+                                <script>
+                                    var taskId = "$taskId";
+                                    function checkStatus() {
+                                        fetch("/checkStatus?taskId=" + taskId)
+                                            .then(response => response.text())
+                                            .then(data => {
+                                                document.getElementById('output').innerHTML = data;
+                                                if (!data.includes("[Process completed]")) {
+                                                    setTimeout(checkStatus, 1000); // هر ۱ ثانیه یکبار چک کند
+                                                }
+                                            });
+                                    }
+                                    checkStatus(); // شروع دریافت وضعیت
+                                </script>
+                            </body>
+                        </html>
+                    """, ContentType.Text.Html
+            )
+        }
+        get("/checkStatus") {
+            val taskId = call.parameters["taskId"]
+            val process = runningProcesses[taskId]
+
+            if (process == null) {
+                call.respondText("Task not found or already completed.")
+                return@get
+            }
+
+            // خواندن خروجی پروسه
+            val output = process.inputStream.bufferedReader().readText()
+
+            // اگر پروسه تمام شده بود، آن را حذف کنیم
+            if (!process.isAlive) {
+                runningProcesses.remove(taskId)
+                call.respondText("$output\n[Process completed]")
+            } else {
+                call.respondText(output)
+            }
+        }
+
+
+        // -----------------------------------------------------------------------
+
+
         get("/resetBot") {
             if (!isDebug) {
                 executeCommand("/bin/bash /root/reset_proxy.sh")
@@ -250,13 +312,20 @@ fun Route.adminRoutes(
     }
 }
 
-suspend fun executeCommand(command: String): String {
-    return withContext(Dispatchers.IO) {
+suspend fun executeCommand(command: String, onLineRead: suspend (String) -> Unit = {}) {
+    withContext(Dispatchers.IO) {
         val process = ProcessBuilder(command.split(" ")).start()
         val reader = BufferedReader(InputStreamReader(process.inputStream))
-        val output = reader.readText()
-        reader.close()
-        process.waitFor()
-        output
+
+        try {
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                onLineRead(line!!)
+            }
+        } finally {
+            reader.close()
+            process.waitFor()
+            onLineRead("[Process completed with exit code ${process.exitValue()}]")
+        }
     }
 }

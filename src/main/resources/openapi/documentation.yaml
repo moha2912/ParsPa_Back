@@ -1,0 +1,2670 @@
+openapi: "3.0.3"
+info:
+  title: "self_mp_ktor_physio API"
+  description: "self_mp_ktor_physio API"
+  version: "1.0.0"
+servers:
+- url: "https://self_mp_ktor_physio"
+paths:
+  /:
+    get:
+      description: "intercept(Plugins) {\n            versionService.create(\n   \
+        \             ExposedVersion(\n                    name = \"apk\",\n     \
+        \               version = \"1.0\",\n                    versionCode = 1,\n\
+        \                    lastChanges = \"Hello changes\",\n                  \
+        \  updateUrl = \"link\"\n                )\n            )\n        }"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+  /admin/app:
+    post:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Nothing was uploaded"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+  /admin/check:
+    post:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+  /admin/finances:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FinancesResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+                    amount: "null"
+                    count: "null"
+                    finances: "null"
+  /admin/login:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/RequestLoginAdmin"
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AdminUserResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Successfully logged in."
+                    user: "null"
+                    token: "null"
+  /admin/orders:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OrdersResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+                    orders: "null"
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/ChangeState"
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+  /admin/orders/read/{id}:
+    post:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+  /admin/pic/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Image not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK <br> A file response"
+          content:
+            application/*:
+              schema:
+                type: "object"
+                format: "binary"
+  /admin/resetBot:
+    get:
+      description: "-----------------------------------------------------------------------"
+      responses:
+        "302":
+          description: "Found <br> Redirect"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "200":
+          description: "OK"
+          content:
+            text/html:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "\n                    <html>\n                        <body>\n\
+                    \                            <h1>Resetting bot...</h1>\n     \
+                    \                   </body>\n                    </html>\n   \
+                    \             "
+  /admin/streamUpdate:
+    get:
+      description: ""
+  /admin/updateArticle:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/html:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "\n                        <html>\n                     \
+                    \       <body>\n                                <p>Executing command...</p>\n\
+                    \                                <pre id=\"output\"></pre>\n \
+                    \                               <script>\n                   \
+                    \                 var eventSource = new EventSource(\"/streamUpdate\"\
+                    );\n                                    var outputElement = document.getElementById('output');\n\
+                    \                                    \n                      \
+                    \              eventSource.onmessage = function(event) {\n   \
+                    \                                     outputElement.innerHTML\
+                    \ += event.data + \"\\\\n\";\n                               \
+                    \     };\n\n                                    eventSource.onerror\
+                    \ = function() {\n                                        outputElement.innerHTML\
+                    \ += \"\\\\n[Process finished]\";\n                          \
+                    \              eventSource.close();\n                        \
+                    \            };\n                                </script>\n \
+                    \                           </body>\n                        </html>\n\
+                    \                    "
+  /admin/updateLanding:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/html:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "\n                    <html>\n                        <body>\n\
+                    \                            <p>Update in <span id=\"timer\">60</span>\
+                    \ seconds...</p>\n                            <script>\n     \
+                    \                           var timeLeft = 60;\n             \
+                    \                   var timerElement = document.getElementById('timer');\n\
+                    \                                \n                          \
+                    \      // هر ثانیه تایمر رو آپدیت می‌کنه\n                   \
+                    \             var countdown = setInterval(function() {\n     \
+                    \                               if (timeLeft <= 0) {\n       \
+                    \                                 clearInterval(countdown);\n\
+                    \                                    } else {\n              \
+                    \                          timeLeft--;\n                     \
+                    \                   timerElement.innerHTML = timeLeft;\n     \
+                    \                               }\n                          \
+                    \      }, 1000); // هر 1000 میلی‌ثانیه (1 ثانیه) اجرا میشه\n \
+                    \                           </script>\n                      \
+                    \  </body>\n                    </html>\n                "
+  /admin/updatePwa:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/html:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "\n                    <html>\n                        <body>\n\
+                    \                            <p>Update in <span id=\"timer\">60</span>\
+                    \ seconds...</p>\n                            <script>\n     \
+                    \                           var timeLeft = 60;\n             \
+                    \                   var timerElement = document.getElementById('timer');\n\
+                    \                                \n                          \
+                    \      // هر ثانیه تایمر رو آپدیت می‌کنه\n                   \
+                    \             var countdown = setInterval(function() {\n     \
+                    \                               if (timeLeft <= 0) {\n       \
+                    \                                 clearInterval(countdown);\n\
+                    \                                    } else {\n              \
+                    \                          timeLeft--;\n                     \
+                    \                   timerElement.innerHTML = timeLeft;\n     \
+                    \                               }\n                          \
+                    \      }, 1000); // هر 1000 میلی‌ثانیه (1 ثانیه) اجرا میشه\n \
+                    \                           </script>\n                      \
+                    \  </body>\n                    </html>\n                "
+  /orders:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OrdersResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+                    orders: "null"
+  /orders/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OrderResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+                    order: "null"
+  /orders/insole:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/InsoleRequest"
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#6:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "The order is not ready for request insole"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Platform must be 0(Application) or 1(WebApp)"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Count must be greater than 0"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "Phone field must be greater than 7."
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "Address field cannot be empty."
+                Example#6:
+                  description: ""
+                  value:
+                    msg: "Name cannot be empty."
+                Example#7:
+                  description: ""
+                  value:
+                    msg: "Post id length must be 10."
+                Example#8:
+                  description: ""
+                  value:
+                    msg: "You must complete profile first."
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#6:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#6:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaymentResponse"
+  /orders/new:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/ExposedOrder"
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "One or few image ids are not found."
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "one or few image ids are blank."
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Age is not acceptable (1-100)."
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "Platform must be 0(Application) or 1(WebApp)"
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "Gender must be 0(Male) or 1(Female)"
+                Example#6:
+                  description: ""
+                  value:
+                    msg: "Feet size must be with 0.5 precision"
+                Example#7:
+                  description: ""
+                  value:
+                    msg: "Feet size must between 30-50."
+                Example#8:
+                  description: ""
+                  value:
+                    msg: "Weight must between 20-120 kg."
+                Example#9:
+                  description: ""
+                  value:
+                    msg: "Feet length must between 10-50 cm."
+                Example#10:
+                  description: ""
+                  value:
+                    msg: "Feet width must between 5-15 cm."
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+  /orders/read:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/ReadOrderRequest"
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+  /orders/unread:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OrdersResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+                    orders: "null"
+  /payment:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "302":
+          description: "Found <br> Redirect"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  description: ""
+                  value: "https://parspa-ai.ir/payment.php"
+                Example#2:
+                  description: ""
+                  value: "https://parspa-ai.ir/payment.php"
+  /payment/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaymentReviewResponse"
+  /payment/check/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaymentResultResponse"
+  /payment/price:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PriceResponse"
+  /upload/pic:
+    post:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Nothing was uploaded"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "File size exceeds limit"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+  /upload/pic/{id}:
+    delete:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Image not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK <br> A file response"
+          content:
+            application/*:
+              schema:
+                type: "object"
+                format: "binary"
+  /upload/vid:
+    post:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Nothing was uploaded"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "File size exceeds limit"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+  /user/avatar:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Empty avatar"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK <br> A file response"
+          content:
+            application/*:
+              schema:
+                type: "object"
+                format: "binary"
+    post:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Nothing was uploaded"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "File size exceeds limit"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+  /user/intros:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/IntrosResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+                    intros: "null"
+  /user/login:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/OTPRequest"
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "The code has expired or is wrong."
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Successfully logged in."
+                    user: "null"
+                    token: "null"
+  /user/profile:
+    get:
+      description: ""
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+                    user: "null"
+                    token: "null"
+    put:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/ExposedUser"
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "Not found"
+                Example#6:
+                  description: ""
+                  value:
+                    msg: "Not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+                Example#6:
+                  description: ""
+                  value:
+                    msg: "You don't have permission"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#4:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#5:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+                Example#6:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+                    user: "null"
+                    token: "null"
+  /user/request:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/OTPRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Hash is empty"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "Wrong phone format (send like 09..)"
+                Example#3:
+                  description: ""
+                  value:
+                    msg: "Empty field."
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OTPResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "The code has sent successfully."
+                    remaining: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    msg: "The code was already sent."
+                    remaining: "null"
+        "429":
+          description: "Too Many Requests"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OTPResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "You have exceeded rate limit and blocked for 6 hours."
+                    remaining: "null"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Server error, try again later"
+  /version/apk:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/RequestVersion"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    msg: "Ok."
+        "406":
+          description: "Not Acceptable"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ExposedVersion"
+components:
+  schemas:
+    BaseResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+    InsoleRequest:
+      type: "object"
+      properties:
+        orderID:
+          type: "integer"
+          format: "int64"
+        postID:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        address:
+          type: "string"
+        phone:
+          type: "string"
+        count:
+          type: "integer"
+          format: "int32"
+        platform:
+          type: "integer"
+          format: "int32"
+    ZibalVerifyResponse:
+      type: "object"
+      properties:
+        amount:
+          type: "integer"
+          format: "int64"
+        cardNumber:
+          type: "string"
+        description:
+          type: "string"
+        message:
+          type: "string"
+        orderId:
+          type: "string"
+        multiplexingInfos:
+          type: "array"
+          items:
+            type: "string"
+        paidAt:
+          type: "string"
+        refNumber:
+          type: "integer"
+          format: "int64"
+        result:
+          type: "integer"
+          format: "int32"
+        status:
+          type: "integer"
+          format: "int32"
+    ExposedFinance:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        date:
+          type: "integer"
+          format: "int64"
+        successDate:
+          type: "integer"
+          format: "int64"
+        trackID:
+          type: "integer"
+          format: "int64"
+        userID:
+          type: "integer"
+          format: "int64"
+        orderID:
+          type: "integer"
+          format: "int64"
+        platform:
+          type: "integer"
+          format: "int32"
+        insole:
+          $ref: "#/components/schemas/InsoleRequest"
+        zibal:
+          $ref: "#/components/schemas/ZibalVerifyResponse"
+        status:
+          type: "string"
+          enum:
+          - "NO_ORDER"
+          - "WAITING"
+          - "ERROR"
+          - "SUCCESS"
+    FinancesResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+        amount:
+          type: "integer"
+          format: "int64"
+        count:
+          type: "integer"
+          format: "int32"
+        finances:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ExposedFinance"
+    RequestLoginAdmin:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+    ExposedAdminUser:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        password:
+          type: "string"
+        username:
+          type: "string"
+    AdminUserResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+        user:
+          $ref: "#/components/schemas/ExposedAdminUser"
+        token:
+          type: "string"
+    ExposedInsole:
+      type: "object"
+      properties:
+        postID:
+          type: "integer"
+          format: "int64"
+        count:
+          type: "integer"
+          format: "int32"
+        name:
+          type: "string"
+        address:
+          type: "string"
+        phone:
+          type: "string"
+    ExposedOrder:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        orderID:
+          type: "integer"
+          format: "int64"
+        userID:
+          type: "integer"
+          format: "int64"
+        created:
+          type: "integer"
+          format: "int64"
+        age:
+          type: "integer"
+          format: "int32"
+        feetLength:
+          type: "number"
+          format: "float"
+        feetWidth:
+          type: "number"
+          format: "float"
+        feetSize:
+          type: "number"
+          format: "float"
+        gender:
+          type: "integer"
+          format: "int32"
+        weight:
+          type: "number"
+          format: "float"
+        state:
+          type: "string"
+          enum:
+          - "PROCESSING"
+          - "ERROR_RESEND"
+          - "DOCTOR_RESPONSE"
+          - "IN_PRODUCTION"
+          - "SENDING"
+          - "DELIVERED"
+        notes:
+          type: "string"
+        platform:
+          type: "integer"
+          format: "int32"
+        insole:
+          $ref: "#/components/schemas/ExposedInsole"
+        doctorResponse:
+          type: "string"
+        resendPictures:
+          type: "array"
+          items:
+            type: "string"
+        concerns:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int32"
+        images:
+          type: "string"
+          enum:
+          - "FOOTS"
+          - "KNEE"
+        video:
+          type: "string"
+    OrdersResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+        orders:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ExposedOrder"
+    ChangeState:
+      type: "object"
+      properties:
+        orderID:
+          type: "integer"
+          format: "int64"
+        newState:
+          type: "string"
+          enum:
+          - "PROCESSING"
+          - "ERROR_RESEND"
+          - "DOCTOR_RESPONSE"
+          - "IN_PRODUCTION"
+          - "SENDING"
+          - "DELIVERED"
+        doctorResponse:
+          type: "string"
+        resendPictures:
+          type: "array"
+          items:
+            type: "string"
+    OrderResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+        order:
+          $ref: "#/components/schemas/ExposedOrder"
+    PaymentResponse:
+      type: "object"
+      properties:
+        link:
+          type: "string"
+        amount:
+          type: "integer"
+          format: "int64"
+    ReadOrderRequest:
+      type: "object"
+      properties:
+        orderID:
+          type: "integer"
+          format: "int64"
+    PaymentReviewResponse:
+      type: "object"
+      properties:
+        insole:
+          $ref: "#/components/schemas/InsoleRequest"
+        date:
+          type: "integer"
+          format: "int64"
+        card:
+          type: "string"
+        refNum:
+          type: "integer"
+          format: "int64"
+        total:
+          type: "integer"
+          format: "int64"
+    PaymentResultResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+          enum:
+          - "NO_ORDER"
+          - "WAITING"
+          - "ERROR"
+          - "SUCCESS"
+        successDate:
+          type: "integer"
+          format: "int64"
+        zibal:
+          $ref: "#/components/schemas/ZibalVerifyResponse"
+    PriceResponse:
+      type: "object"
+      properties:
+        price:
+          type: "integer"
+          format: "int64"
+        priceFormatted:
+          type: "string"
+    IntroStateModel:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+    IntrosResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+        intros:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/IntroStateModel"
+    OTPRequest:
+      type: "object"
+      properties:
+        field:
+          type: "string"
+        code:
+          type: "integer"
+          format: "int32"
+        hash:
+          type: "string"
+        platform:
+          type: "integer"
+          format: "int32"
+    ExposedUser:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        email:
+          type: "string"
+        name:
+          type: "string"
+        birthday:
+          type: "string"
+        gender:
+          type: "integer"
+          format: "int32"
+        phone:
+          type: "string"
+        address:
+          type: "string"
+        appNotify:
+          type: "boolean"
+        smsNotify:
+          type: "boolean"
+        intro:
+          type: "string"
+    UserResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+        user:
+          $ref: "#/components/schemas/ExposedUser"
+        token:
+          type: "string"
+    OTPResponse:
+      type: "object"
+      properties:
+        msg:
+          type: "string"
+        remaining:
+          type: "integer"
+          format: "int64"
+    RequestVersion:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        versionCode:
+          type: "integer"
+          format: "int32"
+    ExposedVersion:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        version:
+          type: "string"
+        versionCode:
+          type: "integer"
+          format: "int32"
+        lastChanges:
+          type: "string"
+        mandatory:
+          type: "boolean"
+        updateUrl:
+          type: "string"
