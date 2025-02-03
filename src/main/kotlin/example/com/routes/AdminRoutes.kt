@@ -62,7 +62,7 @@ fun Route.adminRoutes(
 ) {
     route("/admin") {
         get("/updateArticle") {
-            sendExecuteCommand("update")//update_article
+            sendExecuteCommand("update_article")//update_article
         }
 
         get("/updatePwa") {
