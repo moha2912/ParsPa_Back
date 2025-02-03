@@ -16,6 +16,7 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.pipeline.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -61,39 +62,17 @@ fun Route.adminRoutes(
 ) {
     route("/admin") {
         get("/updateArticle") {
-            val taskId = UUID.randomUUID().toString()
-            val outputFile = "/root/update_article_output_$taskId.log"
-            val scriptToRun = "/root/update_article.sh"
-
-            activeTasks[taskId] = outputFile
-
-            ProcessBuilder("/bin/bash", "/root/runner.sh", outputFile, scriptToRun).start()
-
-            call.respondText(
-                """
-                        <html>
-                            <body>
-                                <p>Executing command...</p>
-                                <pre id="output"></pre>
-                                <script>
-                                    var taskId = "$taskId";
-                                    function checkStatus() {
-                                        fetch("/admin/checkStatus?taskId=" + taskId)
-                                            .then(response => response.text())
-                                            .then(data => {
-                                                document.getElementById('output').innerHTML = data;
-                                                if (!data.includes("[Process completed]")) {
-                                                    setTimeout(checkStatus, 5000); 
-                                                }
-                                            });
-                                    }
-                                    checkStatus();
-                                </script>
-                            </body>
-                        </html>
-                    """, ContentType.Text.Html
-            )
+            sendExecuteCommand("update_article")
         }
+
+        get("/updatePwa") {
+            sendExecuteCommand("update_pwa")
+        }
+        get("/updateLanding") {
+            sendExecuteCommand("update_landing")
+        }
+
+        // -----------------------------------------------------------------------
 
         get("/checkStatus") {
             val taskId = call.parameters["taskId"] ?: return@get call.respondText("Invalid task ID")
@@ -111,10 +90,6 @@ fun Route.adminRoutes(
                 activeTasks.remove(taskId)
             }
         }
-
-
-        // -----------------------------------------------------------------------
-
 
         get("/resetBot") {
             if (!isDebug) {
@@ -134,58 +109,9 @@ fun Route.adminRoutes(
                 """, ContentType.Text.Html
             )
         }
-        get("/updatePwa") {
-            call.respondText(
-                """
-                    <html>
-                        <body>
-                            <p>Update in <span id="timer">60</span> seconds...</p>
-                            <script>
-                                var timeLeft = 60;
-                                var timerElement = document.getElementById('timer');
-                                
-                                // هر ثانیه تایمر رو آپدیت می‌کنه
-                                var countdown = setInterval(function() {
-                                    if (timeLeft <= 0) {
-                                        clearInterval(countdown);
-                                    } else {
-                                        timeLeft--;
-                                        timerElement.innerHTML = timeLeft;
-                                    }
-                                }, 1000); // هر 1000 میلی‌ثانیه (1 ثانیه) اجرا میشه
-                            </script>
-                        </body>
-                    </html>
-                """, ContentType.Text.Html
-            )
-            executeCommand("/bin/bash /root/update_pwa.sh")
-        }
-        get("/updateLanding") {
-            call.respondText(
-                """
-                    <html>
-                        <body>
-                            <p>Update in <span id="timer">60</span> seconds...</p>
-                            <script>
-                                var timeLeft = 60;
-                                var timerElement = document.getElementById('timer');
-                                
-                                // هر ثانیه تایمر رو آپدیت می‌کنه
-                                var countdown = setInterval(function() {
-                                    if (timeLeft <= 0) {
-                                        clearInterval(countdown);
-                                    } else {
-                                        timeLeft--;
-                                        timerElement.innerHTML = timeLeft;
-                                    }
-                                }, 1000); // هر 1000 میلی‌ثانیه (1 ثانیه) اجرا میشه
-                            </script>
-                        </body>
-                    </html>
-                """, ContentType.Text.Html
-            )
-            executeCommand("/bin/bash /root/update_landing.sh")
-        }
+
+        // -----------------------------------------------------------------------
+
         post("/login") {
             val user = call.receive<RequestLoginAdmin>()
             val adminUser =
@@ -208,6 +134,7 @@ fun Route.adminRoutes(
                 )
             )
         }
+
         authenticate {
             post("/check") {
                 checkAdminUser(adminService)
@@ -310,6 +237,50 @@ fun Route.adminRoutes(
     }
 }
 
+suspend fun PipelineContext<Unit, ApplicationCall>.sendExecuteCommand(
+    script: String,
+) {
+    val taskId = UUID
+        .randomUUID()
+        .toString()
+    val outputFile = "/root/updateLogs/${script}_$taskId.log"
+    val scriptToRun = "/root/$script.sh"
+
+    activeTasks[taskId] = outputFile
+
+    withContext(Dispatchers.IO) {
+        ProcessBuilder("/bin/bash", "/root/runner.sh", outputFile, scriptToRun).start()
+    }
+
+    call.respondText(
+        """
+                        <html>
+                            <body>
+                                <p>Executing command...</p>
+                                <pre id="output"></pre>
+                                <script>
+                                    var taskId = "$taskId";
+                                    document.title = "Processing...";
+                                    function checkStatus() {
+                                        fetch("/admin/checkStatus?taskId=" + taskId)
+                                            .then(response => response.text())
+                                            .then(data => {
+                                                document.getElementById('output').innerHTML = data;
+                                                if (data.includes("[Process completed]")) {
+                                                    document.title = "Finished";
+                                                } else {
+                                                    setTimeout(checkStatus, 5000);
+                                                }
+                                            });
+                                    }
+                                    checkStatus();
+                                </script>
+                            </body>
+                        </html>
+                    """, ContentType.Text.Html
+    )
+}
+
 suspend fun executeCommand(command: String, onLineRead: suspend (String) -> Unit = {}) {
     withContext(Dispatchers.IO) {
         val process = ProcessBuilder(command.split(" ")).start()
@@ -317,7 +288,10 @@ suspend fun executeCommand(command: String, onLineRead: suspend (String) -> Unit
 
         try {
             var line: String?
-            while (reader.readLine().also { line = it } != null) {
+            while (reader
+                    .readLine()
+                    .also { line = it } != null
+            ) {
                 onLineRead(line!!)
             }
         } finally {
