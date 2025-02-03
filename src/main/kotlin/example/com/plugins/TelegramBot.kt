@@ -95,7 +95,6 @@ object TelegramBot {
     }
 
     fun sendLogin(phone: String, platform: Short?) {
-        // TODO:  if (isDebug) return
         val message = buildString {
             append("*")
             appendLine("ورود جدید")
@@ -112,7 +111,6 @@ object TelegramBot {
     }
 
     fun sendCreateOrder(id: Long, phone: String?, platform: Short) {
-        // TODO:  if (isDebug) return
         val message = buildString {
             append("*")
             appendLine("درخواست جدید")
@@ -131,7 +129,6 @@ object TelegramBot {
     }
 
     fun sendVerifiedPayment(zibalVerify: ZibalVerifyResponse, finance: ExposedFinance, user: String?) {
-        // TODO:  if (isDebug) return
         val insole = finance.insole
         val platform = finance.platform
         val dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd")
@@ -167,7 +164,6 @@ object TelegramBot {
     }
 
     fun sendCreatedPayment(user: ExposedUser, insoleRequest: InsoleRequest, amount: Long) {
-        // TODO:  if (isDebug) return
         val message = buildString {
             appendLine("ایجاد درگاه پرداخت")
             append("شماره سفارش: ")
@@ -182,7 +178,6 @@ object TelegramBot {
     }
 
     private fun sendTelegramMessage(message: String) {
-        if (isDebug && !sendDebug) return
         val msg = message
             .plus("\n\\#")
             .plus(if (isDebug) "توسعه" else "محصول")
