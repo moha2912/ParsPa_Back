@@ -78,7 +78,7 @@ fun Route.adminRoutes(
                                 <script>
                                     var taskId = "$taskId";
                                     function checkStatus() {
-                                        fetch("/checkStatus?taskId=" + taskId)
+                                        fetch("/admin/checkStatus?taskId=" + taskId)
                                             .then(response => response.text())
                                             .then(data => {
                                                 document.getElementById('output').innerHTML = data;
