@@ -256,7 +256,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.sendExecuteCommand(
         """
                         <html>
                             <body>
-                                <h1 id="header">Starting command...</p>
+                                <h1 id="header">Starting command...</h1>
                                 <pre id="output"></pre>
                                 <script>
                                     var taskId = "$taskId";
