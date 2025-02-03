@@ -50,7 +50,7 @@ data class UploadApp(
     val lastChanges: String,
 )
 
-val runningProcesses = ConcurrentHashMap<String, Process>()
+val activeTasks = ConcurrentHashMap<String, String>()
 
 fun Route.adminRoutes(
     adminService: AdminUserService,
@@ -61,12 +61,13 @@ fun Route.adminRoutes(
 ) {
     route("/admin") {
         get("/updateArticle") {
-            val taskId = UUID
-                .randomUUID().toString() // یک شناسه یکتا برای هر پردازش
+            val taskId = UUID.randomUUID().toString()
+            val outputFile = "/root/update_article_output_$taskId.log"
+            val scriptToRun = "/root/myscript.sh"
 
-            // شروع اجرای دستور در پس‌زمینه
-            val process = ProcessBuilder("/bin/bash", "/root/update_article.sh").start()
-            runningProcesses[taskId] = process
+            activeTasks[taskId] = outputFile
+
+            ProcessBuilder("/bin/bash", "/root/runner.sh", outputFile, scriptToRun).start()
 
             call.respondText(
                 """
@@ -77,40 +78,37 @@ fun Route.adminRoutes(
                                 <script>
                                     var taskId = "$taskId";
                                     function checkStatus() {
-                                        fetch("/admin/checkStatus?taskId=" + taskId)
+                                        fetch("/checkStatus?taskId=" + taskId)
                                             .then(response => response.text())
                                             .then(data => {
                                                 document.getElementById('output').innerHTML = data;
                                                 if (!data.includes("[Process completed]")) {
-                                                    setTimeout(checkStatus, 5000); // هر ۱ ثانیه یکبار چک کند
+                                                    setTimeout(checkStatus, 5000); 
                                                 }
                                             });
                                     }
-                                    checkStatus(); // شروع دریافت وضعیت
+                                    checkStatus();
                                 </script>
                             </body>
                         </html>
                     """, ContentType.Text.Html
             )
         }
-        get("/checkStatus") {
-            val taskId = call.parameters["taskId"]
-            val process = runningProcesses[taskId]
 
-            if (process == null) {
-                call.respondText("Task not found or already completed.")
+        get("/checkStatus") {
+            val taskId = call.parameters["taskId"] ?: return@get call.respondText("Invalid task ID")
+            val outputFile = activeTasks[taskId] ?: return@get call.respondText("Task not found")
+
+            val file = File(outputFile)
+            if (!file.exists()) {
+                call.respondText("No output yet...")
                 return@get
             }
 
-            // خواندن خروجی پروسه
-            val output = process.inputStream.bufferedReader().readText()
-
-            // اگر پروسه تمام شده بود، آن را حذف کنیم
-            if (!process.isAlive) {
-                runningProcesses.remove(taskId)
-                call.respondText("$output\n[Process completed]")
-            } else {
-                call.respondText(output)
+            val output = file.readText()
+            call.respondText(output)
+            if (output.contains("[Process completed]")) {
+                activeTasks.remove(taskId)
             }
         }
 
