@@ -82,7 +82,7 @@ fun Route.adminRoutes(
                                             .then(data => {
                                                 document.getElementById('output').innerHTML = data;
                                                 if (!data.includes("[Process completed]")) {
-                                                    setTimeout(checkStatus, 1000); // هر ۱ ثانیه یکبار چک کند
+                                                    setTimeout(checkStatus, 5000); // هر ۱ ثانیه یکبار چک کند
                                                 }
                                             });
                                     }
@@ -95,9 +95,7 @@ fun Route.adminRoutes(
         }
         get("/checkStatus") {
             val taskId = call.parameters["taskId"]
-            call.respondText(taskId.toString())
-
-            /*val process = runningProcesses[taskId]
+            val process = runningProcesses[taskId]
 
             if (process == null) {
                 call.respondText("Task not found or already completed.")
@@ -113,7 +111,7 @@ fun Route.adminRoutes(
                 call.respondText("$output\n[Process completed]")
             } else {
                 call.respondText(output)
-            }*/
+            }
         }
 
 
