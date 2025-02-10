@@ -91,35 +91,7 @@ fun Route.adminRoutes(
         }
 
         get("/resetBot") {
-            if (isDebug) {
-                TelegramBot.sendRawMessage("vsdfbgnh")
-                call.respondText(
-                    """
-                    <html>
-                        <body>
-                            <h1>Resetting bot...</h1>
-                        </body>
-                    </html>
-                """, ContentType.Text.Html
-                )
-                return@get
-            }
-            if (!isDebug) {
-                executeCommand("/bin/bash /root/reset_proxy.sh")
-                delay(10000)
-                TelegramBot.sendBotMessage()
-                call.respondRedirect(DEBUG_DOMAIN.plus("admin/resetBot"))
-            }
-            TelegramBot.sendBotMessage()
-            call.respondText(
-                """
-                    <html>
-                        <body>
-                            <h1>Resetting bot...</h1>
-                        </body>
-                    </html>
-                """, ContentType.Text.Html
-            )
+            sendExecuteCommand("reset_proxy")//update_article
         }
 
         // -----------------------------------------------------------------------
