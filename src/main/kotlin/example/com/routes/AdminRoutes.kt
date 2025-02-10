@@ -92,6 +92,15 @@ fun Route.adminRoutes(
 
         get("/resetBot") {
             if (!isDebug) {
+                call.respondText(
+                    """
+                    <html>
+                        <body>
+                            <h1>Resetting product bot...</h1>
+                        </body>
+                    </html>
+                """, ContentType.Text.Html
+                )
                 executeCommand("/bin/bash /root/reset_proxy.sh")
                 delay(10000)
                 TelegramBot.sendBotMessage()
@@ -102,7 +111,7 @@ fun Route.adminRoutes(
                 """
                     <html>
                         <body>
-                            <h1>Resetting bot...</h1>
+                            <h1>Resetting develop bot...</h1>
                         </body>
                     </html>
                 """, ContentType.Text.Html
