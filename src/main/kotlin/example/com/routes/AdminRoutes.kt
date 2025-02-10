@@ -64,7 +64,6 @@ fun Route.adminRoutes(
         get("/updateArticle") {
             sendExecuteCommand("update_article")//update_article
         }
-
         get("/updatePwa") {
             sendExecuteCommand("update_pwa")
         }

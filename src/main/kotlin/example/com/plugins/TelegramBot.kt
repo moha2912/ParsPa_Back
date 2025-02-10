@@ -60,7 +60,7 @@ object TelegramBot {
 
     fun prepare() {
         parsBot.startPolling()
-        //sendStartMessage()
+        sendStartMessage()
     }
 
     private fun sendStartMessage() {
