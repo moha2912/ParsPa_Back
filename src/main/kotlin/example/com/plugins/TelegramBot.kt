@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 private const val SELF_ID = 5067903470L
 private const val MOHA_ID = 548307881L
 private const val LOGS_CHANNEL = -1002346633099L
-private var sendDebug = false
+private var sendDebug = true
 
 object TelegramBot {
 
