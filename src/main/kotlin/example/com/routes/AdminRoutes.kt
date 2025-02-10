@@ -70,7 +70,7 @@ fun Route.adminRoutes(
             sendExecuteCommand("update_landing")
         }
         get("/resetBot") {
-            sendExecuteCommand("reset_proxy", onEnd = "fetch(\"/admin/sendBotMessage\")")
+            sendExecuteCommand("reset_proxy")
         }
 
         // -----------------------------------------------------------------------
