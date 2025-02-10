@@ -18,7 +18,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.util.pipeline.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.io.BufferedReader
@@ -70,6 +69,9 @@ fun Route.adminRoutes(
         get("/updateLanding") {
             sendExecuteCommand("update_landing")
         }
+        get("/resetBot") {
+            sendExecuteCommand("reset_proxy", onEnd = "fetch(\"/admin/sendBotMessage\")")
+        }
 
         // -----------------------------------------------------------------------
 
@@ -90,12 +92,25 @@ fun Route.adminRoutes(
             }
         }
 
-        get("/resetBot") {
-            sendExecuteCommand("reset_proxy")//update_article
-        }
-
         // -----------------------------------------------------------------------
 
+        get("/sendBotMessage") {
+            if (!isDebug) {
+                TelegramBot.sendBotMessage()
+                call.respondRedirect(DEBUG_DOMAIN.plus("admin/resetBot"))
+                return@get
+            }
+            TelegramBot.sendBotMessage()
+            call.respondText(
+                """
+                    <html>
+                        <body>
+                            <h1>Resetting bot...</h1>
+                        </body>
+                    </html>
+                """, ContentType.Text.Html
+            )
+        }
         post("/login") {
             val user = call.receive<RequestLoginAdmin>()
             val adminUser =
@@ -223,6 +238,7 @@ fun Route.adminRoutes(
 
 suspend fun PipelineContext<Unit, ApplicationCall>.sendExecuteCommand(
     script: String,
+    onEnd: String = "",
 ) {
     val taskId = UUID
         .randomUUID()
@@ -253,6 +269,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.sendExecuteCommand(
                                                 if (data.includes("[Process completed]")) {
                                                     document.title = "Finished";
                                                     document.getElementById('header').innerHTML = "Finished!";
+                                                    $onEnd;
                                                 } else {
                                                     setTimeout(checkStatus, 5000);
                                                 }
