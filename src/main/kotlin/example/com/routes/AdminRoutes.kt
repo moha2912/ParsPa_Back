@@ -93,6 +93,15 @@ fun Route.adminRoutes(
         get("/resetBot") {
             if (isDebug) {
                 TelegramBot.sendRawMessage("vsdfbgnh")
+                call.respondText(
+                    """
+                    <html>
+                        <body>
+                            <h1>Resetting bot...</h1>
+                        </body>
+                    </html>
+                """, ContentType.Text.Html
+                )
                 return@get
             }
             if (!isDebug) {
