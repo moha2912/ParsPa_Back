@@ -44,7 +44,7 @@ ktor {
 dependencies {
     implementation("io.ktor:ktor-server-cors")
     implementation("io.ktor:ktor-server-rate-limit")
-    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.5.7")
     implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.1.0")
     implementation("com.github.mfathi91:persian-date-time:4.2.1")
     //implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")

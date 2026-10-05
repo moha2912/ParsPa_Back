@@ -54,7 +54,7 @@ class UserService(
         val intro = varchar(
             "intro",
             length = 30
-        ).default("NOT_DEFINED") references IntroductionStateService.IntroductionState.id
+        ).default("NOT_DEFINED") //references IntroductionStateService.IntroductionState.id
 
         override val primaryKey = PrimaryKey(id)
     }

@@ -9,7 +9,7 @@ var env: String = "dsvfb"
 const val USERS_FOLDER = "users/"
 const val MAIN_DOMAIN = "https://parspa-ai.ir/"
 const val API_DOMAIN = "https://api.parspa-ai.ir/"
-const val DEBUG_DOMAIN = "https://dev.parspa-ai.ir/"
+const val DEBUG_DOMAIN = "http://127.0.0.1:8000/"
 const val PAYMENT_ROUTE = "payment"
 const val PRD_PAYMENT_ADDRESS = "$API_DOMAIN$PAYMENT_ROUTE"
 const val DEV_PAYMENT_ADDRESS = "$DEBUG_DOMAIN$PAYMENT_ROUTE"
@@ -17,8 +17,8 @@ const val DEV_PAYMENT_ADDRESS = "$DEBUG_DOMAIN$PAYMENT_ROUTE"
 const val DL_HOST = "https://dl.parspa-ai.ir/"
 const val DL_PATH = "/var/www/downloads/"
 
-const val DEEPLINK_ERROR = "${MAIN_DOMAIN}payment.php"
-const val DEEPLINK_SUCCESS = "${MAIN_DOMAIN}payment.php"
+const val DEEPLINK_ERROR = "parspa://payment"//"${MAIN_DOMAIN}payment.php"
+const val DEEPLINK_SUCCESS = "parspa://payment"//"${MAIN_DOMAIN}payment.php"
 
 const val SMS_PATTERN_URL = "https://api2.ippanel.com/api/v1/sms/pattern/normal/send"
 const val SMS_NORMAL_URL = "https://api2.ippanel.com/api/v1/sms/send/webservice/single"
@@ -44,7 +44,7 @@ fun Application.module() {
     env = environment.config
         .propertyOrNull("ktor.environment")
         ?.getString() ?: "sdvf"
-    isDebug = env == "development"
+    isDebug = true/*env == "development"*/
     TelegramBot.prepare()
     configureCors()
     configureRateLimit()
